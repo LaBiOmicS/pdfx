@@ -2,6 +2,7 @@
  * Ferramenta: Editar PDF — Inserir Textos, Tarjas (Preta/Branca) e Comentários
  */
 import { readFileAsArrayBuffer, downloadBlob, formatBytes, notify, setLoading } from '../utils.js';
+import { t } from '../i18n.js';
 
 export class EditPdfTool {
   constructor() {
@@ -30,29 +31,29 @@ export class EditPdfTool {
           <div>
             <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="edit-3" class="w-7 h-7 text-indigo-600"></i>
-              Editar PDF — Textos, Tarjas & Comentários
+              ${t('editTitle')}
             </h2>
-            <p class="text-sm text-slate-500 mt-0.5">Tarje dados confidenciais, adicione caixas de texto e insira notas e comentários nas páginas.</p>
+            <p class="text-sm text-slate-500 mt-0.5">${t('editSubtitle')}</p>
           </div>
           <div class="flex items-center gap-3">
-            <button id="btn-save-edited-pdf" disabled class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-lg shadow-indigo-600/25 transition">
+            <button id="btn-save-edited-pdf" disabled class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-lg shadow-purple-600/25 transition">
               <i data-lucide="download" class="w-4 h-4"></i>
-              <span>Salvar PDF Editado</span>
+              <span>${t('btnSaveEdited')}</span>
             </button>
           </div>
         </div>
 
         <!-- Dropzone Section -->
         <div id="dropzone-section">
-          <div id="dropzone" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-10 text-center cursor-pointer transition bg-slate-50/50 hover:bg-indigo-50/20 group">
+          <div id="dropzone" class="border-2 border-dashed border-slate-300 hover:border-purple-500 rounded-2xl p-10 text-center cursor-pointer transition bg-slate-50/50 hover:bg-purple-50/20 group">
             <input type="file" id="file-input" accept=".pdf" class="hidden" />
             <div class="flex flex-col items-center justify-center space-y-3">
-              <div class="w-16 h-16 rounded-2xl bg-indigo-100 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition duration-200">
+              <div class="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition duration-200">
                 <i data-lucide="file-up" class="w-8 h-8"></i>
               </div>
               <div>
-                <p class="text-base font-semibold text-slate-700">Selecione o arquivo PDF para editar</p>
-                <p class="text-xs text-slate-400 mt-1">Clique ou arraste um PDF aqui</p>
+                <p class="text-base font-semibold text-slate-700">${t('dropzoneText')}</p>
+                <p class="text-xs text-slate-400 mt-1">${t('dropzoneSubtitle')}</p>
               </div>
             </div>
           </div>
@@ -65,29 +66,29 @@ export class EditPdfTool {
           <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2.5">
             <!-- Left Action Tools -->
             <div class="flex flex-wrap items-center gap-2">
-              <button id="btn-add-text" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-xs flex items-center gap-1.5 transition">
+              <button id="btn-add-text" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold text-xs flex items-center gap-1.5 transition">
                 <i data-lucide="type" class="w-4 h-4"></i>
-                <span>+ Texto</span>
+                <span>${t('btnAddText')}</span>
               </button>
               
               <button id="btn-add-redact-black" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-sm">
                 <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
-                <span>Tarja Preta (Censurar)</span>
+                <span>${t('btnRedactBlack')}</span>
               </button>
 
               <button id="btn-add-redact-white" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition border border-slate-200">
                 <i data-lucide="square" class="w-4 h-4"></i>
-                <span>Tarja Branca (Apagar)</span>
+                <span>${t('btnRedactWhite')}</span>
               </button>
 
               <button id="btn-add-comment" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs flex items-center gap-1.5 transition border border-amber-200">
                 <i data-lucide="message-square" class="w-4 h-4 text-amber-600"></i>
-                <span>+ Comentário / Nota</span>
+                <span>${t('btnAddComment')}</span>
               </button>
 
               <button id="btn-add-highlight" class="px-3 py-1.5 rounded-xl bg-yellow-50 hover:bg-yellow-100 text-yellow-800 font-semibold text-xs flex items-center gap-1.5 transition border border-yellow-200">
                 <i data-lucide="highlighter" class="w-4 h-4 text-yellow-600"></i>
-                <span>Marca-Texto</span>
+                <span>${t('btnHighlight')}</span>
               </button>
             </div>
 
@@ -114,19 +115,19 @@ export class EditPdfTool {
                 </button>
               </div>
               <button id="btn-change-file" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">
-                Trocar Arquivo
+                ${t('btnChangeFile')}
               </button>
             </div>
           </div>
 
           <!-- Formatting Properties Bar -->
-          <div id="formatting-bar" class="bg-indigo-50/60 p-2.5 border border-indigo-100 rounded-xl flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
-            <span class="text-indigo-800 font-bold flex items-center gap-1">
-              <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Propriedades:
+          <div id="formatting-bar" class="bg-purple-50/60 p-2.5 border border-purple-100 rounded-xl flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
+            <span class="text-purple-800 font-bold flex items-center gap-1">
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i> ${t('propFormat')}
             </span>
             
             <div id="prop-font-group" class="flex items-center gap-1.5">
-              <span>Fonte:</span>
+              <span>${t('propFontSize')}</span>
               <select id="prop-font-size" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs">
                 <option value="10">10 pt</option>
                 <option value="12">12 pt</option>
@@ -140,7 +141,7 @@ export class EditPdfTool {
             </div>
 
             <div id="prop-color-group" class="flex items-center gap-1.5">
-              <span>Cor:</span>
+              <span>${t('propColor')}</span>
               <input type="color" id="prop-color" value="#000000" class="w-7 h-7 p-0.5 border border-slate-300 rounded cursor-pointer bg-white">
             </div>
 
@@ -150,7 +151,7 @@ export class EditPdfTool {
 
             <button id="btn-delete-active-box" class="ml-auto text-rose-600 hover:text-rose-800 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-100 transition font-semibold">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              <span>Excluir Item Selecionado</span>
+              <span>${t('btnDeleteSelected')}</span>
             </button>
           </div>
 
@@ -164,7 +165,7 @@ export class EditPdfTool {
           </div>
 
           <p class="text-center text-xs text-slate-500">
-            💡 <strong>Instruções:</strong> Use a barra superior para adicionar tarjas pretas (censura), notas adesivas ou caixas de texto. Arraste pela barra superior para mover e <strong>pelo canto inferior direito (◢) para redimensionar</strong> a tarja ou caixa.
+            ${t('editHint')}
           </p>
 
         </div>
