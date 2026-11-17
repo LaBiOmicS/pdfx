@@ -13,6 +13,8 @@ import { ImgToPdfTool } from './tools/imgToPdf.js';
 import { PdfToImgTool } from './tools/pdfToImg.js';
 import { WatermarkTool } from './tools/watermark.js';
 import { PageNumbersTool } from './tools/pageNumbers.js';
+import { PdfToTextTool } from './tools/pdfToText.js';
+import { GrayscalePdfTool } from './tools/grayscalePdf.js';
 
 const TOOLS_CONFIG = [
   {
@@ -184,6 +186,40 @@ const TOOLS_CONFIG = [
     iconBg: 'bg-slate-100 text-slate-700',
     badge: null,
     createInstance: () => new PageNumbersTool()
+  },
+  {
+    id: 'pdf-to-text',
+    name: {
+      pt: 'Extrair Texto (TXT)',
+      en: 'Extract Text (TXT)',
+      es: 'Extraer Texto (TXT)'
+    },
+    description: {
+      pt: 'Extraia todo o texto do PDF com contagem de palavras, caracteres e exportação em .TXT.',
+      en: 'Extract all text content from the PDF with word/character counts and .TXT export.',
+      es: 'Extrae todo el texto del PDF con conteo de palabras, caracteres y exportación a .TXT.'
+    },
+    icon: 'file-text',
+    iconBg: 'bg-teal-50 text-teal-700',
+    badge: { pt: 'Novo', en: 'New', es: 'Nuevo' },
+    createInstance: () => new PdfToTextTool()
+  },
+  {
+    id: 'grayscale-pdf',
+    name: {
+      pt: 'PDF Preto e Branco',
+      en: 'Grayscale PDF (B&W)',
+      es: 'PDF Blanco y Negro'
+    },
+    description: {
+      pt: 'Converta PDFs coloridos para tons de cinza ou alto contraste para economizar tinta.',
+      en: 'Convert color PDFs into grayscale or high contrast to save ink and print cleanly.',
+      es: 'Convierte PDFs a blanco y negro o alto contraste para ahorrar tinta e imprimir.'
+    },
+    icon: 'contrast',
+    iconBg: 'bg-zinc-100 text-zinc-800',
+    badge: { pt: 'Novo', en: 'New', es: 'Nuevo' },
+    createInstance: () => new GrayscalePdfTool()
   }
 ];
 

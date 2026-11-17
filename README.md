@@ -34,6 +34,8 @@
 8. **PDF para Imagens**: Converta páginas em fotos PNG/JPG em alta resolução (150, 200 ou 300 DPI) com download direto ou em lote compactado (`.zip`).
 9. **Marca d'Água**: Aplique textos personalizados com ângulo, opacidade e cores customizadas.
 10. **Numerar Páginas**: Insira numeração de páginas automatizada no cabeçalho ou rodapé.
+11. **Extrair Texto do PDF (PDF para TXT)**: Extraia todo o conteúdo textual do PDF com contagem precisa de palavras e caracteres, pré-visualização formatada, botão de cópia instantânea e exportação em arquivo `.txt`.
+12. **PDF em Preto e Branco (Escala de Cinza / Grayscale)**: Converta PDFs coloridos para tons de cinza ou alto contraste com resolução selecionável (150 ou 200 DPI), perfeito para economizar tinta/toner em impressões e atender exigências de editais, concursos e repositórios acadêmicos.
 
 ---
 
