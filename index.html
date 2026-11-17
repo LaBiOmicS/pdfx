@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDFX — Laboratório de Bioinformática e Ciências Ômicas (LaBiOmicS)</title>
-  <meta name="description" content="PDFX: Ferramentas profissionais de PDF que rodam 100% no navegador. Desenvolvido pelo LaBiOmicS (Laboratório de Bioinformática e Ciências Ômicas).">
+  <meta name="description" content="PDFX: Democratizando o acesso à edição profissional de PDF. 100% gratuito, sem limites e processado estritamente no seu navegador. LaBiOmicS.">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,7 +36,7 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-slate-50/60 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white">
+<body class="bg-slate-50/70 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white">
 
   <!-- Top Institutional Bar -->
   <div class="bg-slate-950 text-slate-300 text-[11px] font-medium py-2 px-4 border-b border-slate-800">
@@ -45,12 +45,12 @@
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
         <span class="text-white font-semibold tracking-wide">LaBiOmicS</span>
         <span class="text-slate-500">—</span>
-        <span class="text-slate-300 font-normal">Laboratório de Bioinformática e Ciências Ômicas</span>
+        <span class="text-slate-300 font-normal" data-i18n="labFullName">Laboratório de Bioinformática e Ciências Ômicas</span>
       </div>
       <div class="flex items-center gap-4 text-slate-400 text-[10px] uppercase tracking-wider">
-        <span>Segurança de Dados</span>
+        <span data-i18n="heroBadge">Democratização Tecnológica</span>
         <span>•</span>
-        <span>Conformidade LGPD</span>
+        <span>Código Aberto</span>
         <span>•</span>
         <span>100% No Navegador</span>
       </div>
@@ -100,98 +100,212 @@
   </header>
 
   <!-- Main View Container -->
-  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+  <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
     
     <!-- DASHBOARD VIEW -->
-    <div id="dashboard-view" class="space-y-12">
+    <div id="dashboard-view" class="space-y-16">
       
-      <!-- Sleek, Modern, High-Class Hero -->
-      <div class="relative py-8 sm:py-12 border-b border-slate-200/80">
-        <div class="max-w-4xl mx-auto text-center space-y-5">
+      <!-- HERO: Direct Marketing & Live Document Mockup -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2 pb-6 border-b border-slate-200/80">
+        
+        <!-- Left: Punchy Marketing & Democratization Message (7 cols) -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
           
-          <!-- Institutional pill -->
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-medium shadow-xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>Laboratório de Bioinformática e Ciências Ômicas</span>
-            <span class="text-slate-300">•</span>
-            <span class="text-slate-500" data-i18n="heroBadge">Privacidade Absoluta & LGPD</span>
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-bold shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
+            <span data-i18n="heroBadge">Democratização do Acesso • 100% Gratuito & Livre</span>
           </div>
 
-          <!-- Main Hero Heading -->
-          <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-            <span data-i18n="heroTitle">Manipulação profissional de PDF,</span><br/>
-            <span class="text-indigo-600 font-extrabold" data-i18n="heroTitleSub">privada, instantânea e sem servidor.</span>
+          <!-- Headline -->
+          <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.14]">
+            <span data-i18n="heroTitle">Edite qualquer PDF direto no seu navegador.</span><br/>
+            <span class="text-indigo-600 font-extrabold" data-i18n="heroTitleSub">Sem assinaturas. Sem limites. Sem nuvem.</span>
           </h1>
 
-          <!-- Concise Subtitle -->
-          <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed" data-i18n="heroSubtitle">
-            Edite textos, marque trechos importantes, aplique tarjas de censura, junte, divida e organize páginas. Seus documentos nunca saem do seu navegador.
+          <!-- Value Proposition Subtitle -->
+          <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0" data-i18n="heroSubtitle">
+            Uma iniciativa do LaBiOmicS para democratizar ferramentas essenciais de manipulação de documentos para estudantes, pesquisadores e profissionais sem barreiras de pagamento.
           </p>
 
-          <!-- Core Pillars (Clean, unbloated) -->
-          <div class="pt-2 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-500">
-            <div class="flex items-center gap-2">
-              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-              <span>100% Processamento Local</span>
+          <!-- Direct CTAs -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-1">
+            <button id="hero-btn-edit" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-lg shadow-slate-950/20 flex items-center justify-center gap-2 transition hover:-translate-y-0.5">
+              <i data-lucide="edit-3" class="w-4 h-4 text-amber-400"></i>
+              <span data-i18n="heroCtaEdit">Começar a Editar PDF</span>
+            </button>
+            <a href="#ferramentas" class="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-white border border-slate-200 hover:border-slate-400 text-slate-800 font-bold text-sm flex items-center justify-center gap-2 transition shadow-xs">
+              <span data-i18n="heroCtaTools">Ver Todas as Ferramentas</span>
+              <i data-lucide="arrow-down" class="w-4 h-4 text-slate-400"></i>
+            </a>
+          </div>
+
+          <!-- Trust Pillars Row -->
+          <div class="pt-3 grid grid-cols-3 gap-3 max-w-md mx-auto lg:mx-0 text-left border-t border-slate-100">
+            <div>
+              <p class="text-xs font-bold text-slate-800">100% Gratuito</p>
+              <p class="text-[11px] text-slate-400">Sem planos pagos</p>
             </div>
-            <div class="flex items-center gap-2">
-              <i data-lucide="lock" class="w-4 h-4 text-slate-700"></i>
-              <span>Zero Upload para Servidores</span>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Zero Servidores</p>
+              <p class="text-[11px] text-slate-400">Privacidade total</p>
             </div>
-            <div class="flex items-center gap-2">
-              <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
-              <span>Sem Limites ou Assinaturas</span>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Ilimitado</p>
+              <p class="text-[11px] text-slate-400">Sem cotas diárias</p>
             </div>
           </div>
         </div>
+
+        <!-- Right: Realistic Visual Mockup of a PDF Being Actively Edited (5 cols) -->
+        <div class="lg:col-span-5 relative">
+          <!-- Decorative Glow Backdrop -->
+          <div class="absolute -inset-2 bg-gradient-to-tr from-indigo-500/10 via-amber-500/10 to-purple-500/10 rounded-3xl blur-xl pointer-events-none"></div>
+
+          <!-- Document Sheet Mockup -->
+          <div class="relative bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 shadow-xl shadow-slate-200/50 space-y-4">
+            
+            <!-- Mockup Document Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-[11px] font-mono font-bold">PDF</div>
+                <div>
+                  <p class="text-xs font-extrabold text-slate-800" data-i18n="demoDocumentTitle">Parecer Técnico Institucional</p>
+                  <p class="text-[10px] text-slate-400">documento_oficial.pdf • Página 1 de 4</p>
+                </div>
+              </div>
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Ao Vivo
+              </span>
+            </div>
+
+            <!-- Mockup Content with Live Annotations Demonstrated -->
+            <div class="space-y-3.5 text-xs text-slate-600 leading-relaxed font-serif">
+              
+              <!-- 1. Paragraph with Yellow Highlighter Demonstration -->
+              <p class="relative p-1">
+                A comissão avaliadora declara que todos os
+                <span class="bg-yellow-200/90 text-yellow-950 font-sans font-bold px-1.5 py-0.5 rounded border-b-2 border-yellow-400 inline-block shadow-xs">
+                  🖍️ <span data-i18n="demoHighlightText">Resultados validados com alta reprodutibilidade estatística</span>
+                </span>
+                foram devidamente confirmados segundo os critérios de rigor acadêmico.
+              </p>
+
+              <!-- 2. Paragraph with Black Redaction Tarja Demonstration -->
+              <div class="p-2 bg-slate-50 rounded-xl border border-slate-100 space-y-1 font-sans">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dados Sensíveis Ocultados:</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-slate-500">CPF do Titular:</span>
+                  <div class="bg-black text-neutral-300 px-2 py-0.5 rounded text-[10px] font-mono font-bold select-none tracking-wider shadow-xs">
+                    ⬛ <span data-i18n="demoRedactedTag">[ CENSURADO — LGPD ]</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Paragraph with Whiteout Text Replacement Demonstration -->
+              <p class="relative p-1 font-sans">
+                <span class="text-slate-400 text-xs">Observação final:</span>
+                <span class="inline-flex items-center bg-white border border-indigo-300 ring-2 ring-indigo-500/20 px-2 py-1 rounded-lg text-indigo-950 font-bold text-xs shadow-xs">
+                  ✏️ <span data-i18n="demoReplacedText">Texto corrigido e inserido com alinhamento profissional</span>
+                  <span class="w-0.5 h-3.5 bg-indigo-600 ml-1 animate-pulse"></span>
+                </span>
+              </p>
+            </div>
+
+            <!-- Mockup Sticky Note Demonstration (Post-it) -->
+            <div class="bg-amber-50 border border-amber-300/80 rounded-xl p-3 shadow-md transform -rotate-1 hover:rotate-0 transition duration-200">
+              <div class="flex items-center justify-between text-[11px] font-bold text-amber-900 pb-1 mb-1 border-b border-amber-200/60">
+                <span class="flex items-center gap-1">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-600"></i>
+                  <span data-i18n="demoNoteAuthor">Comitê de Avaliação</span>
+                </span>
+                <span class="text-[10px] text-amber-700 font-mono">Nota de Revisão</span>
+              </div>
+              <p class="text-[11px] text-amber-950 leading-relaxed font-sans" data-i18n="demoNoteText">
+                Aprovado para publicação imediata com acesso público e irrestrito.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
       </div>
 
-      <!-- Tools Grid -->
-      <div>
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
-            Ferramentas Disponíveis
+      <!-- COMPARISON / DEMOCRATIZATION BANNER: Commercial Paywalls vs. PDFX -->
+      <div class="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-10 shadow-xs">
+        <div class="max-w-3xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Transparência e Ética</span>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1" data-i18n="compTitle">
+            Acesso democrático vs. Ferramentas comerciais
           </h2>
-          <span class="text-xs text-slate-400">8 módulos prontos</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Box Outros Editores -->
+          <div class="p-5 rounded-2xl bg-rose-50/50 border border-rose-200/80 space-y-3">
+            <div class="flex items-center gap-2 text-rose-800 font-bold text-sm">
+              <i data-lucide="x-circle" class="w-4 h-4 text-rose-600"></i>
+              <span data-i18n="compOtherTitle">Editores Comerciais (iLovePDF, Smallpdf, etc.)</span>
+            </div>
+            <ul class="text-xs text-slate-600 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-rose-500 font-bold">•</span>
+                <span data-i18n="compOtherItem1">Cobram assinaturas caras (R$ 30 a R$ 60/mês)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-500 font-bold">•</span>
+                <span data-i18n="compOtherItem2">Bloqueiam após 2 ou 3 documentos por dia</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-500 font-bold">•</span>
+                <span data-i18n="compOtherItem3">Fazem upload dos seus dados sigilosos para servidores externos</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Box PDFX LaBiOmicS -->
+          <div class="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-300 space-y-3 shadow-xs">
+            <div class="flex items-center gap-2 text-emerald-900 font-bold text-sm">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span data-i18n="compPdfxTitle">PDFX (LaBiOmicS)</span>
+            </div>
+            <ul class="text-xs text-slate-700 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span data-i18n="compPdfxItem1">100% Gratuito e Aberto para sempre, sem pegadinhas</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span data-i18n="compPdfxItem2">Uso verdadeiramente ilimitado, sem necessidade de cadastro</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span data-i18n="compPdfxItem3">Privacidade absoluta: roda 100% na memória do seu navegador</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TOOLS SECTION -->
+      <div id="ferramentas" class="space-y-6 pt-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-black text-slate-900 tracking-tight">
+              Todas as Ferramentas de PDF
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Selecione uma ferramenta abaixo para iniciar imediatamente.</p>
+          </div>
+          <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+            8 Módulos 100% Gratuitos
+          </span>
         </div>
 
         <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           <!-- Rendered dynamically by app.js -->
-        </div>
-      </div>
-
-      <!-- Institutional Assurance Banner -->
-      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="space-y-1.5">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
-              <i data-lucide="shield" class="w-4 h-4 text-indigo-600"></i>
-              <span>Sigilo para Pesquisa & Saúde</span>
-            </div>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Criado para atender às demandas de confidencialidade de artigos científicos, prontuários e dados genômicos no ambiente acadêmico.
-            </p>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
-              <i data-lucide="cpu" class="w-4 h-4 text-indigo-600"></i>
-              <span>Computação Client-Side</span>
-            </div>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              A manipulação matemática dos arquivos acontece estritamente na memória RAM do seu navegador via WebAssembly e JavaScript.
-            </p>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
-              <i data-lucide="code" class="w-4 h-4 text-indigo-600"></i>
-              <span>Código Aberto LaBiOmicS</span>
-            </div>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Disponível publicamente no GitHub sob licença aberta para auditoria, colaboração e hospedagem própria sem custo.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -205,21 +319,26 @@
   </main>
 
   <!-- Global Footer -->
-  <footer class="border-t border-slate-200/80 bg-white py-8 mt-16 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
-        <span class="font-extrabold text-slate-800">PDFX</span>
-        <span class="hidden sm:inline text-slate-300">•</span>
-        <span>Desenvolvido pelo <strong>LaBiOmicS</strong> — Laboratório de Bioinformática e Ciências Ômicas</span>
+  <footer class="border-t border-slate-200/80 bg-white py-10 mt-16 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+          <span class="font-extrabold text-slate-800 text-sm">PDFX</span>
+          <span class="hidden sm:inline text-slate-300">•</span>
+          <span>Desenvolvido pelo <strong>LaBiOmicS</strong> — Laboratório de Bioinformática e Ciências Ômicas</span>
+        </div>
+        <div class="flex items-center gap-4 font-semibold text-slate-600">
+          <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="hover:text-slate-900 transition flex items-center gap-1">
+            <i data-lucide="github" class="w-4 h-4"></i>
+            <span>GitHub</span>
+          </a>
+          <span>•</span>
+          <span>Democratização & Código Aberto</span>
+        </div>
       </div>
-      <div class="flex items-center gap-4 font-medium text-slate-600">
-        <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="hover:text-slate-900 transition flex items-center gap-1">
-          <i data-lucide="github" class="w-4 h-4"></i>
-          <span>GitHub</span>
-        </a>
-        <span>•</span>
-        <span>100% Client-Side</span>
-      </div>
+      <p class="text-center text-[11px] text-slate-400">
+        Este software opera integralmente via processamento client-side em conformidade com as diretrizes da LGPD (Brasil) e GDPR (União Europeia). Nenhum arquivo ou dado é enviado a servidores externos.
+      </p>
     </div>
   </footer>
 
@@ -237,7 +356,7 @@
       </div>
       <div>
         <h3 class="text-sm font-bold text-slate-900" data-i18n="processing">Processando documento...</h3>
-        <p id="loading-text" class="text-xs text-slate-500 mt-1" data-i18n="waitMoment">Aguarde alguns segundos enquanto o arquivo é gerado.</p>
+        <p id="loading-text" class="text-xs text-slate-500 mt-1" data-i18n="waitMoment">Aguarde alguns segundos enquanto seu arquivo é gerado.</p>
       </div>
     </div>
   </div>

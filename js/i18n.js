@@ -10,11 +10,32 @@ export const TRANSLATIONS = {
     labFullName: 'Laboratório de Bioinformática e Ciências Ômicas',
     developedBy: 'LaBiOmicS — Laboratório de Bioinformática e Ciências Ômicas',
     privacyBadge: 'Processamento 100% Local • Zero Servidores',
-    heroBadge: 'Privacidade Total & Conformidade LGPD',
-    heroTitle: 'Manipulação profissional de PDF,',
-    heroTitleSub: 'privada, instantânea e sem servidor.',
-    heroSubtitle: 'Edite textos, marque trechos importantes, aplique tarjas de censura, junte, divida e organize páginas. Seus documentos nunca saem do seu navegador.',
-    
+    heroBadge: 'Democratização do Acesso • 100% Gratuito & Livre',
+    heroTitle: 'Edite qualquer PDF direto no seu navegador.',
+    heroTitleSub: 'Sem assinaturas. Sem limites. Sem enviar seus dados para a nuvem.',
+    heroSubtitle: 'Uma iniciativa do LaBiOmicS para democratizar ferramentas essenciais de manipulação de documentos para estudantes, pesquisadores e profissionais.',
+    heroCtaEdit: 'Começar a Editar PDF',
+    heroCtaTools: 'Ver Todas as Ferramentas',
+
+    // Mockup Demo Texts
+    demoDocumentTitle: 'Relatório Técnico e Parecer Institucional',
+    demoHighlightText: 'Resultados validados com alta reprodutibilidade estatística',
+    demoRedactedTag: '[ DADO PESSOAL CENSURADO — LGPD ]',
+    demoReplacedText: 'Texto corrigido e inserido com alinhamento profissional',
+    demoNoteAuthor: 'Comitê de Avaliação',
+    demoNoteText: 'Aprovado para publicação imediata com acesso público e irrestrito.',
+
+    // Comparison Section
+    compTitle: 'Acesso democrático vs. Ferramentas comerciais',
+    compOtherTitle: 'Editores Comerciais (iLovePDF, Smallpdf, etc.)',
+    compOtherItem1: 'Cobram assinaturas caras (R$ 30 a R$ 60/mês)',
+    compOtherItem2: 'Bloqueiam após 2 ou 3 documentos por dia',
+    compOtherItem3: 'Fazem upload dos seus dados sigilosos para servidores externos',
+    compPdfxTitle: 'PDFX (LaBiOmicS)',
+    compPdfxItem1: '100% Gratuito e Aberto para sempre, sem pegadinhas',
+    compPdfxItem2: 'Uso verdadeiramente ilimitado, sem necessidade de cadastro',
+    compPdfxItem3: 'Privacidade absoluta: roda 100% na memória do seu navegador',
+
     // Tools
     toolOpen: 'Abrir ferramenta',
     backHome: 'Voltar ao Início',
@@ -131,10 +152,31 @@ export const TRANSLATIONS = {
     labFullName: 'Bioinformatics and Computational Omics Laboratory',
     developedBy: 'LaBiOmicS — Laboratório de Bioinformática e Ciências Ômicas',
     privacyBadge: '100% In-Browser • Zero Servers',
-    heroBadge: 'Absolute Privacy & GDPR Compliance',
-    heroTitle: 'Professional PDF tools,',
-    heroTitleSub: 'private, instantaneous, and serverless.',
-    heroSubtitle: 'Edit text, highlight sentences, redact confidential data, merge, split, and organize pages. Your documents never leave your browser.',
+    heroBadge: 'Democratizing Tech • 100% Free & Open',
+    heroTitle: 'Edit any PDF directly in your browser.',
+    heroTitleSub: 'No subscriptions. No limits. Zero server uploads.',
+    heroSubtitle: 'An initiative by LaBiOmicS to democratize essential document tools for students, researchers, and professionals worldwide.',
+    heroCtaEdit: 'Start Editing PDF',
+    heroCtaTools: 'Explore All Tools',
+
+    // Mockup Demo Texts
+    demoDocumentTitle: 'Technical Report & Institutional Review',
+    demoHighlightText: 'Results thoroughly validated with statistical precision',
+    demoRedactedTag: '[ SENSITIVE PERSONAL DATA REDACTED — GDPR ]',
+    demoReplacedText: 'Corrected text inserted with seamless professional alignment',
+    demoNoteAuthor: 'Review Board',
+    demoNoteText: 'Approved for unrestricted public distribution and immediate open access.',
+
+    // Comparison Section
+    compTitle: 'Democratized Access vs. Commercial Paywalls',
+    compOtherTitle: 'Commercial Editors (iLovePDF, Smallpdf, etc.)',
+    compOtherItem1: 'Charge expensive monthly fees ($10 to $20/month)',
+    compOtherItem2: 'Lock features after 2 or 3 documents per day',
+    compOtherItem3: 'Upload your sensitive confidential files to cloud servers',
+    compPdfxTitle: 'PDFX (LaBiOmicS)',
+    compPdfxItem1: '100% Free and Open Source forever, zero hidden costs',
+    compPdfxItem2: 'Truly unlimited processing with no signup required',
+    compPdfxItem3: 'Absolute privacy: runs strictly in your browser memory',
 
     // Tools
     toolOpen: 'Open tool',
@@ -252,10 +294,31 @@ export const TRANSLATIONS = {
     labFullName: 'Laboratorio de Bioinformática y Ciencias Ómicas',
     developedBy: 'LaBiOmicS — Laboratório de Bioinformática e Ciências Ômicas',
     privacyBadge: '100% En el Navegador • Cero Servidores',
-    heroBadge: 'Privacidad Absoluta & Cumplimiento RGPD',
-    heroTitle: 'Herramientas profesionales de PDF,',
-    heroTitleSub: 'privadas, instantáneas y sin servidor.',
-    heroSubtitle: 'Edita textos, resalta líneas importantes, censura datos confidenciales, une, divide y organiza páginas. Tus documentos nunca salen de tu ordenador.',
+    heroBadge: 'Democratización Tecnológica • 100% Gratuito y Libre',
+    heroTitle: 'Edita cualquier PDF directamente en tu navegador.',
+    heroTitleSub: 'Sin suscripciones. Sin límites. Cero subida de datos a la nube.',
+    heroSubtitle: 'Una iniciativa de LaBiOmicS para democratizar las herramientas esenciales de edición para estudiantes, investigadores y profesionales.',
+    heroCtaEdit: 'Comenzar a Editar PDF',
+    heroCtaTools: 'Ver Todas las Herramientas',
+
+    // Mockup Demo Texts
+    demoDocumentTitle: 'Informe Técnico y Dictamen Institucional',
+    demoHighlightText: 'Resultados validados con alta reproducibilidad estadística',
+    demoRedactedTag: '[ DATO PERSONAL CENSURADO — RGPD ]',
+    demoReplacedText: 'Texto corregido e insertado con alineación profesional',
+    demoNoteAuthor: 'Comité de Revisión',
+    demoNoteText: 'Aprobado para distribución pública inmediata y libre acceso.',
+
+    // Comparison Section
+    compTitle: 'Acceso Democrático vs. Herramientas Comerciales',
+    compOtherTitle: 'Editores Comerciales (iLovePDF, Smallpdf, etc.)',
+    compOtherItem1: 'Cobran suscripciones mensuales costosas ($10 a $20/mes)',
+    compOtherItem2: 'Bloquean funciones tras 2 o 3 documentos por día',
+    compOtherItem3: 'Suben tus archivos confidenciales a servidores externos',
+    compPdfxTitle: 'PDFX (LaBiOmicS)',
+    compPdfxItem1: '100% Gratuito y Abierto para siempre, sin cargos ocultos',
+    compPdfxItem2: 'Uso verdaderamente ilimitado, sin necesidad de registro',
+    compPdfxItem3: 'Privacidad absoluta: se ejecuta en la memoria de tu navegador',
 
     // Tools
     toolOpen: 'Abrir herramienta',
@@ -350,7 +413,7 @@ export const TRANSLATIONS = {
     watermarkColorGray: 'Gris Discreto',
     watermarkColorRed: 'Rojo Alerta',
     watermarkColorBlue: 'Azul Corporativo',
-    watermarkOpacity: 'Opacidad',
+    watermarkOpacity: 'Opacidade',
     watermarkAngle: 'Ángulo',
 
     // Page Numbers

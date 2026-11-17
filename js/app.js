@@ -173,6 +173,14 @@ class App {
       });
     });
 
+    // Hero quick CTA to edit PDF
+    const heroEditBtn = document.getElementById('hero-btn-edit');
+    if (heroEditBtn) {
+      heroEditBtn.addEventListener('click', () => {
+        this.navigateTo('edit-pdf');
+      });
+    }
+
     // Language switcher
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
