@@ -1,6 +1,6 @@
 /**
  * Ferramenta: Editar PDF — Textos, Substituição, Marca-Texto, Tarjas e Notas
- * Suporte completo a i18n (PT, EN, ES)
+ * Nova Disposição: Workspace Studio em tela ampla com alinhamento flex-start (sem cortes)
  */
 import { readFileAsArrayBuffer, downloadBlob, formatBytes, notify, setLoading } from '../utils.js';
 import { t } from '../i18n.js';
@@ -14,9 +14,10 @@ export class EditPdfTool {
     this.currentPage = 1;
     this.container = document.getElementById('tool-workspace');
     
-    // Scale for rendering page canvas
-    this.viewportScale = 1.35;
+    // Zoom and viewport
+    this.viewportScale = 1.25;
     this.currentViewport = null;
+    this.basePageWidth = 595;
 
     // Annotations map: pageNumber (1-based) -> Array of annotations
     // Types: 'text' | 'replace_text' | 'highlight' | 'redact_black' | 'redact_white' | 'comment'
@@ -26,122 +27,103 @@ export class EditPdfTool {
 
   render() {
     this.container.innerHTML = `
-      <div class="max-w-6xl mx-auto space-y-4">
-        <!-- Header & Action Bar -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200">
-          <div>
-            <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-              <i data-lucide="edit-3" class="w-7 h-7 text-purple-600"></i>
-              ${t('editTitle')}
-            </h2>
-            <p class="text-sm text-slate-500 mt-0.5">${t('editSubtitle')}</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <button id="btn-save-edited-pdf" disabled class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-lg shadow-purple-600/25 transition">
-              <i data-lucide="download" class="w-4 h-4"></i>
-              <span>${t('btnSaveEdited')}</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Dropzone Section -->
-        <div id="dropzone-section">
-          <div id="dropzone" class="border-2 border-dashed border-slate-300 hover:border-purple-500 rounded-2xl p-10 text-center cursor-pointer transition bg-slate-50/50 hover:bg-purple-50/20 group">
-            <input type="file" id="file-input" accept=".pdf" class="hidden" />
-            <div class="flex flex-col items-center justify-center space-y-3">
-              <div class="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition duration-200">
-                <i data-lucide="file-up" class="w-8 h-8"></i>
-              </div>
-              <div>
-                <p class="text-base font-semibold text-slate-700">${t('dropzoneText')}</p>
-                <p class="text-xs text-slate-400 mt-1">${t('dropzoneSubtitle')}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Editor Workspace (Hidden until file is loaded) -->
-        <div id="editor-workspace" class="hidden space-y-3">
-          
-          <!-- Top Editor Toolbar -->
-          <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2.5">
-            <!-- Left Action Tools -->
-            <div class="flex flex-wrap items-center gap-2">
-              <!-- Marca-Texto Prominente -->
-              <button id="btn-add-highlight" class="px-3.5 py-2 rounded-xl bg-yellow-100 hover:bg-yellow-200 text-yellow-900 font-bold text-xs flex items-center gap-1.5 transition border border-yellow-300 shadow-xs">
-                <i data-lucide="highlighter" class="w-4 h-4 text-yellow-700"></i>
-                <span>🖍️ ${t('btnHighlight')}</span>
-              </button>
-
-              <!-- Substituir Texto (Fundo Branco para apagar e redigitar) -->
-              <button id="btn-add-replace-text" class="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-semibold text-xs flex items-center gap-1.5 transition border border-purple-200">
-                <i data-lucide="replace" class="w-4 h-4 text-purple-600"></i>
-                <span>${t('btnReplaceText')}</span>
-              </button>
-
-              <!-- Texto Livre -->
-              <button id="btn-add-text" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition">
-                <i data-lucide="type" class="w-4 h-4"></i>
-                <span>${t('btnAddText')}</span>
-              </button>
-              
-              <!-- Tarja Preta -->
-              <button id="btn-add-redact-black" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-sm">
-                <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
-                <span>${t('btnRedactBlack')}</span>
-              </button>
-
-              <!-- Tarja Branca -->
-              <button id="btn-add-redact-white" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition border border-slate-200">
-                <i data-lucide="square" class="w-4 h-4"></i>
-                <span>${t('btnRedactWhite')}</span>
-              </button>
-
-              <!-- Comentário / Post-it -->
-              <button id="btn-add-comment" class="px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs flex items-center gap-1.5 transition border border-amber-200">
-                <i data-lucide="message-square" class="w-4 h-4 text-amber-600"></i>
-                <span>${t('btnAddComment')}</span>
-              </button>
-            </div>
-
-            <!-- Page Navigation -->
-            <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
-              <button id="btn-prev-page" class="p-1 hover:bg-white rounded-lg transition disabled:opacity-30">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i>
-              </button>
-              <span id="page-indicator">Página 1 de 1</span>
-              <button id="btn-next-page" class="p-1 hover:bg-white rounded-lg transition disabled:opacity-30">
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-
-            <!-- Zoom & Change File -->
-            <div class="flex items-center gap-3">
-              <div class="flex items-center gap-1 text-xs text-slate-600 font-semibold">
-                <button id="btn-zoom-out" class="p-1.5 hover:bg-slate-100 rounded-lg transition" title="Reduzir zoom">
-                  <i data-lucide="zoom-out" class="w-4 h-4"></i>
+      <div class="w-full space-y-4">
+        
+        <!-- Top Studio Bar (Sticky for easy editing) -->
+        <div class="sticky top-16 z-30 bg-white border border-slate-200/90 rounded-2xl p-3 shadow-md backdrop-blur-md">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-3">
+            
+            <!-- Left: Page Navigator & Back -->
+            <div class="flex items-center gap-2 w-full lg:w-auto justify-between lg:justify-start">
+              <div class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800">
+                <button id="btn-prev-page" class="p-1 hover:bg-white rounded-lg transition disabled:opacity-30" title="Página anterior">
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 </button>
-                <span id="zoom-label" class="w-12 text-center">100%</span>
-                <button id="btn-zoom-in" class="p-1.5 hover:bg-slate-100 rounded-lg transition" title="Aumentar zoom">
-                  <i data-lucide="zoom-in" class="w-4 h-4"></i>
+                <span id="page-indicator" class="min-w-20 text-center">Pág. 1 de 1</span>
+                <button id="btn-next-page" class="p-1 hover:bg-white rounded-lg transition disabled:opacity-30" title="Próxima página">
+                  <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </button>
               </div>
-              <button id="btn-change-file" class="text-xs text-slate-500 hover:text-slate-800 font-semibold px-2 py-1">
+
+              <button id="btn-change-file" class="text-xs text-slate-500 hover:text-slate-900 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition">
                 ${t('btnChangeFile')}
               </button>
             </div>
+
+            <!-- Center: Editing Tools -->
+            <div class="flex flex-wrap items-center justify-center gap-1.5 w-full lg:w-auto">
+              <!-- Marca-Texto -->
+              <button id="btn-add-highlight" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs flex items-center gap-1.5 transition border border-amber-300 shadow-xs">
+                <i data-lucide="highlighter" class="w-4 h-4 text-amber-700"></i>
+                <span>${t('btnHighlight')}</span>
+              </button>
+
+              <!-- Substituir Texto (Fundo Branco) -->
+              <button id="btn-add-replace-text" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center gap-1.5 transition border border-indigo-200">
+                <i data-lucide="replace" class="w-4 h-4 text-indigo-600"></i>
+                <span>Substituir Texto</span>
+              </button>
+
+              <!-- Texto Livre -->
+              <button id="btn-add-text" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition">
+                <i data-lucide="type" class="w-4 h-4"></i>
+                <span>+ Texto</span>
+              </button>
+              
+              <!-- Tarja Preta -->
+              <button id="btn-add-redact-black" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-sm">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
+                <span>Tarja Preta</span>
+              </button>
+
+              <!-- Tarja Branca -->
+              <button id="btn-add-redact-white" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition border border-slate-200 shadow-xs">
+                <i data-lucide="square" class="w-4 h-4"></i>
+                <span>Tarja Branca</span>
+              </button>
+
+              <!-- Comentário -->
+              <button id="btn-add-comment" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs flex items-center gap-1.5 transition border border-amber-200">
+                <i data-lucide="message-square" class="w-4 h-4 text-amber-600"></i>
+                <span>Nota</span>
+              </button>
+            </div>
+
+            <!-- Right: Zoom & Save Action -->
+            <div class="flex items-center gap-3 w-full lg:w-auto justify-end">
+              <!-- Zoom Controls -->
+              <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+                <button id="btn-zoom-out" class="p-1 hover:bg-white rounded-lg transition" title="Reduzir">
+                  <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                </button>
+                <span id="zoom-label" class="w-12 text-center font-mono">100%</span>
+                <button id="btn-zoom-in" class="p-1 hover:bg-white rounded-lg transition" title="Aumentar">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                </button>
+                <button id="btn-fit-width" class="px-2 py-0.5 hover:bg-white rounded-lg transition text-[11px]" title="Ajustar à largura">
+                  Ajustar
+                </button>
+              </div>
+
+              <!-- Save CTA -->
+              <button id="btn-save-edited-pdf" disabled class="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-md transition">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>${t('btnSaveEdited')}</span>
+              </button>
+            </div>
+
           </div>
 
-          <!-- Formatting Properties Bar -->
-          <div id="formatting-bar" class="bg-purple-50/70 p-2.5 border border-purple-100 rounded-xl flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
-            <span class="text-purple-800 font-bold flex items-center gap-1">
-              <i data-lucide="sliders" class="w-3.5 h-3.5"></i> ${t('propFormat')}
+          <!-- Secondary Properties Ribbon (Contextual for selected item) -->
+          <div id="formatting-bar" class="mt-2.5 pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-700">
+            <span class="text-slate-400 font-bold uppercase tracking-wider text-[10px] flex items-center gap-1">
+              <i data-lucide="sliders" class="w-3 h-3"></i> Formatação:
             </span>
             
             <!-- Font Size -->
             <div id="prop-font-group" class="flex items-center gap-1.5">
-              <span>${t('propFontSize')}</span>
-              <select id="prop-font-size" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs">
+              <span class="text-slate-500">Tamanho:</span>
+              <select id="prop-font-size" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
                 <option value="10">10 pt</option>
                 <option value="12">12 pt</option>
                 <option value="14" selected>14 pt</option>
@@ -155,53 +137,75 @@ export class EditPdfTool {
 
             <!-- Text Color -->
             <div id="prop-color-group" class="flex items-center gap-1.5">
-              <span>${t('propColor')}</span>
-              <input type="color" id="prop-color" value="#000000" class="w-7 h-7 p-0.5 border border-slate-300 rounded cursor-pointer bg-white">
+              <span class="text-slate-500">Cor:</span>
+              <input type="color" id="prop-color" value="#000000" class="w-6 h-6 p-0 border border-slate-200 rounded cursor-pointer bg-white">
             </div>
 
             <!-- Bold Button -->
-            <button id="prop-toggle-bold" class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-bold text-slate-700 hover:bg-slate-100 transition" title="Alternar Negrito">
+            <button id="prop-toggle-bold" class="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-lg font-bold text-slate-700 hover:bg-slate-200 transition" title="Alternar Negrito">
               B
             </button>
 
-            <!-- Background Option (Transparent vs White to cover original) -->
+            <!-- Background Option -->
             <div id="prop-bg-group" class="flex items-center gap-1.5">
-              <span>${t('propBgLabel')}</span>
-              <select id="prop-bg-select" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs">
-                <option value="transparent">${t('propBgTransparent')}</option>
-                <option value="white">${t('propBgWhite')}</option>
+              <span class="text-slate-500">Fundo:</span>
+              <select id="prop-bg-select" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
+                <option value="transparent">Transparente</option>
+                <option value="white">Branco (Cobrir Original)</option>
               </select>
             </div>
 
-            <!-- Highlighter Color Presets (shown when highlight is selected) -->
-            <div id="prop-highlight-colors" class="hidden flex items-center gap-1.5">
-              <span>Cor do Marca-Texto:</span>
-              <div class="flex items-center gap-1">
-                <button class="hl-color-btn w-6 h-6 rounded-full bg-yellow-300 border-2 border-yellow-500 shadow-xs" data-color="yellow" title="Amarelo"></button>
-                <button class="hl-color-btn w-6 h-6 rounded-full bg-emerald-300 border-2 border-slate-300 shadow-xs" data-color="green" title="Verde"></button>
-                <button class="hl-color-btn w-6 h-6 rounded-full bg-pink-300 border-2 border-slate-300 shadow-xs" data-color="pink" title="Rosa"></button>
-                <button class="hl-color-btn w-6 h-6 rounded-full bg-cyan-300 border-2 border-slate-300 shadow-xs" data-color="blue" title="Azul"></button>
+            <!-- Highlighter Color Presets -->
+            <div id="prop-highlight-colors" class="hidden flex items-center gap-2">
+              <span class="text-slate-500">Cor do Marca-Texto:</span>
+              <div class="flex items-center gap-1.5">
+                <button class="hl-color-btn w-5 h-5 rounded-full bg-yellow-300 border-2 border-yellow-500" data-color="yellow" title="Amarelo"></button>
+                <button class="hl-color-btn w-5 h-5 rounded-full bg-emerald-300 border-2 border-slate-200" data-color="green" title="Verde"></button>
+                <button class="hl-color-btn w-5 h-5 rounded-full bg-pink-300 border-2 border-slate-200" data-color="pink" title="Rosa"></button>
+                <button class="hl-color-btn w-5 h-5 rounded-full bg-cyan-300 border-2 border-slate-200" data-color="blue" title="Azul"></button>
               </div>
             </div>
 
-            <button id="btn-delete-active-box" class="ml-auto text-rose-600 hover:text-rose-800 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-100 transition font-semibold">
+            <!-- Delete Selected -->
+            <button id="btn-delete-active-box" class="ml-auto text-rose-600 hover:text-rose-700 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition font-semibold text-xs">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              <span>${t('btnDeleteSelected')}</span>
+              <span>Excluir Selecionado</span>
             </button>
           </div>
+        </div>
 
-          <!-- Canvas Page Stage with Proper Scroll (NO flex items-center clipping) -->
-          <div id="canvas-scroll-container" class="relative bg-slate-200/80 p-6 rounded-3xl overflow-auto max-h-[78vh] text-center">
-            <div id="page-stage-container" class="relative bg-white shadow-2xl rounded mx-auto my-0 transition-transform origin-top text-left inline-block">
+        <!-- Dropzone Section -->
+        <div id="dropzone-section">
+          <div id="dropzone" class="border-2 border-dashed border-slate-300 hover:border-slate-800 rounded-3xl p-12 text-center cursor-pointer transition bg-white group shadow-xs">
+            <input type="file" id="file-input" accept=".pdf" class="hidden" />
+            <div class="flex flex-col items-center justify-center space-y-3">
+              <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-800 group-hover:scale-105 transition duration-200">
+                <i data-lucide="file-up" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <p class="text-base font-bold text-slate-800">${t('dropzoneText')}</p>
+                <p class="text-xs text-slate-400 mt-1">${t('dropzoneSubtitle')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Editor Workspace (Hidden until file is loaded) -->
+        <div id="editor-workspace" class="hidden space-y-3">
+          
+          <!-- Document Canvas Stage (align-items: flex-start prevents ANY top/title clipping!) -->
+          <div id="canvas-scroll-container" class="w-full bg-slate-200/90 rounded-3xl p-4 sm:p-10 overflow-auto min-h-[70vh] max-h-[82vh] flex justify-center items-start shadow-inner">
+            <div id="page-stage-container" class="relative bg-white shadow-2xl rounded origin-top flex-shrink-0 transition-transform">
               <canvas id="pdf-page-canvas" class="block"></canvas>
-              <!-- Annotations overlay layer exactly matching canvas dimensions -->
+              <!-- Annotations overlay layer matching canvas dimensions -->
               <div id="annotations-layer" class="absolute inset-0 overflow-visible pointer-events-none"></div>
             </div>
           </div>
 
-          <p class="text-center text-xs text-slate-500">
-            ${t('editHint')}
-          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 px-2">
+            <span>💡 <strong>Dica:</strong> Arraste elementos pela barra superior para reposicionar. Use a alça <strong>◢</strong> para redimensionar.</span>
+            <span id="doc-dimensions-badge" class="font-mono text-[11px] text-slate-400">Dimensões: 0 x 0</span>
+          </div>
 
         </div>
       </div>
@@ -228,6 +232,7 @@ export class EditPdfTool {
     const nextPageBtn = document.getElementById('btn-next-page');
     const zoomInBtn = document.getElementById('btn-zoom-in');
     const zoomOutBtn = document.getElementById('btn-zoom-out');
+    const fitWidthBtn = document.getElementById('btn-fit-width');
     const saveBtn = document.getElementById('btn-save-edited-pdf');
     const changeBtn = document.getElementById('btn-change-file');
     const deleteActiveBtn = document.getElementById('btn-delete-active-box');
@@ -276,7 +281,7 @@ export class EditPdfTool {
       saveBtn.disabled = true;
     });
 
-    // Add buttons
+    // Tool actions
     addHighlightBtn?.addEventListener('click', () => this.addAnnotation('highlight'));
     addReplaceTextBtn?.addEventListener('click', () => this.addAnnotation('replace_text'));
     addTextBtn?.addEventListener('click', () => this.addAnnotation('text'));
@@ -300,18 +305,22 @@ export class EditPdfTool {
 
     zoomInBtn?.addEventListener('click', () => {
       if (this.viewportScale < 2.5) {
-        this.viewportScale += 0.25;
+        this.viewportScale = parseFloat((this.viewportScale + 0.15).toFixed(2));
         this.updateZoomLabel();
         this.renderCurrentPage();
       }
     });
 
     zoomOutBtn?.addEventListener('click', () => {
-      if (this.viewportScale > 0.75) {
-        this.viewportScale -= 0.25;
+      if (this.viewportScale > 0.6) {
+        this.viewportScale = parseFloat((this.viewportScale - 0.15).toFixed(2));
         this.updateZoomLabel();
         this.renderCurrentPage();
       }
+    });
+
+    fitWidthBtn?.addEventListener('click', () => {
+      this.autoFitToWidth();
     });
 
     // Property updates on active box
@@ -374,7 +383,21 @@ export class EditPdfTool {
   updateZoomLabel() {
     const label = document.getElementById('zoom-label');
     if (label) {
-      label.textContent = `${Math.round((this.viewportScale / 1.35) * 100)}%`;
+      label.textContent = `${Math.round(this.viewportScale * 100)}%`;
+    }
+  }
+
+  autoFitToWidth() {
+    const scrollContainer = document.getElementById('canvas-scroll-container');
+    if (!scrollContainer || !this.basePageWidth) return;
+    
+    // Fit to container width with comfortable margins
+    const availableWidth = scrollContainer.clientWidth - 80;
+    if (availableWidth > 200) {
+      const targetScale = parseFloat((availableWidth / this.basePageWidth).toFixed(2));
+      this.viewportScale = Math.max(0.6, Math.min(1.8, targetScale));
+      this.updateZoomLabel();
+      this.renderCurrentPage();
     }
   }
 
@@ -401,12 +424,18 @@ export class EditPdfTool {
       this.annotations = {};
       this.activeAnnotationId = null;
 
+      // Get page 1 dimensions to calculate optimal fit scale
+      const firstPage = await this.pdfJsDoc.getPage(1);
+      const unscaledViewport = firstPage.getViewport({ scale: 1.0 });
+      this.basePageWidth = unscaledViewport.width;
+
       document.getElementById('dropzone-section').classList.add('hidden');
       document.getElementById('editor-workspace').classList.remove('hidden');
       document.getElementById('btn-save-edited-pdf').disabled = false;
 
-      await this.renderCurrentPage();
-      notify('PDF carregado com sucesso! Escolha uma ferramenta acima.', 'success');
+      // Set scale that fits screen nicely
+      this.autoFitToWidth();
+      notify('PDF carregado com sucesso! Escolha uma ferramenta na barra.', 'success');
     } catch (err) {
       console.error(err);
       notify(`Erro ao carregar PDF: ${err.message || err}`, 'error');
@@ -440,14 +469,19 @@ export class EditPdfTool {
 
       await page.render(renderContext).promise;
 
-      // Update page navigation UI
-      document.getElementById('page-indicator').textContent = `Página ${this.currentPage} de ${this.totalPages}`;
+      // Update badge and UI
+      document.getElementById('page-indicator').textContent = `Pág. ${this.currentPage} de ${this.totalPages}`;
       document.getElementById('btn-prev-page').disabled = this.currentPage <= 1;
       document.getElementById('btn-next-page').disabled = this.currentPage >= this.totalPages;
+      
+      const dimBadge = document.getElementById('doc-dimensions-badge');
+      if (dimBadge) {
+        dimBadge.textContent = `Visualização: ${Math.round(this.currentViewport.width)} × ${Math.round(this.currentViewport.height)} px`;
+      }
 
       this.renderAnnotationsForPage();
 
-      // Ensure scroll container starts at top
+      // Reset scroll to top
       const scrollEl = document.getElementById('canvas-scroll-container');
       if (scrollEl) scrollEl.scrollTop = 0;
 
@@ -476,7 +510,7 @@ export class EditPdfTool {
       height = 42;
       text = 'Novo texto...';
       fontSize = 14;
-      bgType = 'white'; // Covers original text!
+      bgType = 'white'; // Covers original text
     } else if (type === 'text') {
       width = 200;
       height = 42;
@@ -499,6 +533,7 @@ export class EditPdfTool {
       color = '#78350f';
     }
 
+    // Position in the visible center area of the document
     const newBox = {
       id,
       type,
@@ -519,12 +554,12 @@ export class EditPdfTool {
     this.renderAnnotationsForPage();
 
     const messages = {
-      highlight: 'Marca-texto adicionado! Posicione sobre o texto e estique pela quina ◢.',
-      replace_text: 'Substituição de texto adicionada! Fundo branco ativado para cobrir o texto antigo.',
+      highlight: 'Marca-texto posicionado! Arraste sobre o texto e puxe a alça ◢ para ajustar.',
+      replace_text: 'Caixa de substituição adicionada! O fundo branco apaga o texto original.',
       text: 'Caixa de texto adicionada!',
       redact_black: 'Tarja preta de censura adicionada.',
       redact_white: 'Tarja branca para apagar adicionada.',
-      comment: 'Nota adesiva de comentário adicionada.'
+      comment: 'Nota adesiva adicionada.'
     };
     notify(messages[type] || 'Item adicionado.', 'info');
   }
@@ -555,19 +590,19 @@ export class EditPdfTool {
       let innerContent = '';
 
       if (ann.type === 'highlight') {
-        const bgClasses = {
+        const bgColors = {
           yellow: 'bg-yellow-300/50 border-yellow-400',
           green: 'bg-emerald-300/50 border-emerald-400',
           pink: 'bg-pink-300/50 border-pink-400',
           blue: 'bg-cyan-300/50 border-cyan-400'
         };
-        const activeClass = bgClasses[ann.highlightColor || 'yellow'] || bgClasses.yellow;
+        const activeClass = bgColors[ann.highlightColor || 'yellow'] || bgColors.yellow;
 
         box.className = `absolute pointer-events-auto select-none rounded border ${activeClass} shadow-xs group ${
-          isActive ? 'ring-2 ring-purple-600' : ''
+          isActive ? 'ring-2 ring-slate-900' : ''
         }`;
         innerContent = `
-          <div class="flex items-center justify-between px-1.5 py-0.5 bg-yellow-400/80 text-[10px] text-yellow-950 drag-handle cursor-move rounded-t font-bold">
+          <div class="flex items-center justify-between px-1.5 py-0.5 bg-yellow-400/90 text-[10px] text-yellow-950 drag-handle cursor-move rounded-t font-bold">
             <span class="flex items-center gap-1">
               <i data-lucide="highlighter" class="w-3 h-3"></i> Marca-Texto
             </span>
@@ -578,7 +613,7 @@ export class EditPdfTool {
         `;
       } else if (ann.type === 'redact_black') {
         box.className = `absolute pointer-events-auto select-none bg-black rounded shadow-md group ${
-          isActive ? 'ring-2 ring-purple-600' : 'hover:ring-1 hover:ring-slate-400'
+          isActive ? 'ring-2 ring-slate-900' : 'hover:ring-1 hover:ring-slate-400'
         }`;
         innerContent = `
           <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-800 text-[10px] text-white drag-handle cursor-move rounded-t">
@@ -595,7 +630,7 @@ export class EditPdfTool {
         `;
       } else if (ann.type === 'redact_white') {
         box.className = `absolute pointer-events-auto select-none bg-white rounded border border-slate-300 shadow-sm group ${
-          isActive ? 'ring-2 ring-purple-600' : 'hover:border-slate-500'
+          isActive ? 'ring-2 ring-slate-900' : 'hover:border-slate-500'
         }`;
         innerContent = `
           <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-100 text-[10px] text-slate-600 drag-handle cursor-move rounded-t border-b border-slate-200">
@@ -612,12 +647,12 @@ export class EditPdfTool {
         `;
       } else if (ann.type === 'comment') {
         box.className = `absolute pointer-events-auto select-none bg-amber-50 rounded-xl border border-amber-300 shadow-md group ${
-          isActive ? 'ring-2 ring-purple-600' : 'hover:shadow-lg'
+          isActive ? 'ring-2 ring-slate-900' : 'hover:shadow-lg'
         }`;
         innerContent = `
           <div class="flex items-center justify-between px-2 py-1 bg-amber-200/90 text-[11px] text-amber-900 drag-handle cursor-move rounded-t-xl font-bold border-b border-amber-300/60">
             <span class="flex items-center gap-1">
-              <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-700"></i> Nota de Revisão
+              <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-700"></i> Nota
             </span>
             <button class="btn-del-ann text-amber-700 hover:text-rose-600">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
@@ -631,13 +666,13 @@ export class EditPdfTool {
         // Plain Text or Replace Text
         const isWhiteBg = ann.bgType === 'white' || ann.type === 'replace_text';
         box.className = `absolute pointer-events-auto rounded shadow-xs group ${
-          isWhiteBg ? 'bg-white border border-slate-300' : 'bg-transparent border border-dashed border-slate-400/80 hover:border-purple-500'
-        } ${isActive ? 'ring-2 ring-purple-600 shadow-md' : ''}`;
+          isWhiteBg ? 'bg-white border border-slate-300' : 'bg-transparent border border-dashed border-slate-400/80 hover:border-slate-800'
+        } ${isActive ? 'ring-2 ring-slate-900 shadow-md' : ''}`;
 
         innerContent = `
           <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-100/95 border-b border-slate-200 rounded-t text-[10px] text-slate-600 drag-handle cursor-move select-none ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}">
             <span class="flex items-center gap-1 font-bold">
-              <i data-lucide="type" class="w-3 h-3 text-purple-600"></i>
+              <i data-lucide="type" class="w-3 h-3 text-slate-700"></i>
               ${isWhiteBg ? 'Texto (Substituir)' : 'Texto Livre'}
             </span>
             <button class="btn-del-ann text-slate-400 hover:text-rose-600">
@@ -657,7 +692,7 @@ export class EditPdfTool {
 
       // Resize handle on bottom-right corner
       innerContent += `
-        <div class="resize-handle absolute bottom-0 right-0 w-4 h-4 cursor-se-resize flex items-center justify-center text-slate-400 hover:text-purple-600 font-mono text-[10px] select-none opacity-60 hover:opacity-100 pointer-events-auto">
+        <div class="resize-handle absolute bottom-0 right-0 w-4 h-4 cursor-se-resize flex items-center justify-center text-slate-400 hover:text-slate-900 font-mono text-[10px] select-none opacity-60 hover:opacity-100 pointer-events-auto">
           ◢
         </div>
       `;
@@ -725,11 +760,11 @@ export class EditPdfTool {
     if (propBgSelect) propBgSelect.value = (ann.bgType === 'white' || ann.type === 'replace_text') ? 'white' : 'transparent';
     if (propBold) {
       if (ann.isBold) {
-        propBold.classList.add('bg-purple-600', 'text-white');
-        propBold.classList.remove('bg-white', 'text-slate-700');
+        propBold.classList.add('bg-slate-900', 'text-white');
+        propBold.classList.remove('bg-slate-100', 'text-slate-700');
       } else {
-        propBold.classList.remove('bg-purple-600', 'text-white');
-        propBold.classList.add('bg-white', 'text-slate-700');
+        propBold.classList.remove('bg-slate-900', 'text-white');
+        propBold.classList.add('bg-slate-100', 'text-slate-700');
       }
     }
   }
@@ -948,7 +983,6 @@ export class EditPdfTool {
           else if ((ann.type === 'text' || ann.type === 'replace_text') && ann.text.trim()) {
             const isWhiteBg = ann.bgType === 'white' || ann.type === 'replace_text';
 
-            // Se for substituição ou fundo branco, apaga o texto original que estiver por baixo!
             if (isWhiteBg) {
               page.drawRectangle({
                 x: boxX,
