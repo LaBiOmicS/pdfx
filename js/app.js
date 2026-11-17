@@ -1,6 +1,6 @@
 /**
  * PDFX - Application Main Controller & Router (Multilingual PT/EN/ES)
- * Developed by LaBiOmicS (Laboratório de Bioinformática e Ômicas)
+ * Developed by LaBiOmicS (Laboratório de Bioinformática e Ciências Ômicas)
  */
 import { getLang, setLang, t } from './i18n.js';
 import { EditPdfTool } from './tools/editPdf.js';
@@ -16,17 +16,17 @@ const TOOLS_CONFIG = [
   {
     id: 'edit-pdf',
     name: {
-      pt: 'Editar PDF (Texto, Tarjas & Notas)',
-      en: 'Edit PDF (Text, Redaction & Notes)',
-      es: 'Editar PDF (Texto, Tachaduras & Notas)'
+      pt: 'Editar PDF & Marca-Texto',
+      en: 'Edit PDF & Highlighter',
+      es: 'Editar PDF & Resaltador'
     },
     description: {
-      pt: 'Insira textos, tarjas pretas de censura, tarjas brancas e notas adesivas de comentários.',
-      en: 'Insert text, blackout redactions, whiteout erase, and review sticky notes.',
-      es: 'Inserta textos, tachaduras de censura, tachadura blanca y notas adhesivas de revisión.'
+      pt: 'Substitua textos, passe marca-texto, aplique tarjas pretas de censura e notas adesivas.',
+      en: 'Replace text, highlight sentences, apply blackout redactions, and add notes.',
+      es: 'Reemplaza textos, resalta líneas, aplica tachaduras de censura y añade notas.'
     },
     icon: 'edit-3',
-    color: 'from-rose-500 via-purple-600 to-indigo-600',
+    iconBg: 'bg-indigo-50 text-indigo-700',
     badge: { pt: 'Destaque', en: 'Featured', es: 'Destacado' },
     createInstance: () => new EditPdfTool()
   },
@@ -43,7 +43,7 @@ const TOOLS_CONFIG = [
       es: 'Combina múltiples archivos PDF en un solo documento organizado.'
     },
     icon: 'layers',
-    color: 'from-blue-500 to-indigo-600',
+    iconBg: 'bg-blue-50 text-blue-700',
     badge: { pt: 'Popular', en: 'Popular', es: 'Popular' },
     createInstance: () => new MergeTool()
   },
@@ -60,7 +60,7 @@ const TOOLS_CONFIG = [
       es: 'Extrae páginas individuales o rangos específicos en nuevos PDFs.'
     },
     icon: 'scissors',
-    color: 'from-amber-500 to-orange-600',
+    iconBg: 'bg-amber-50 text-amber-700',
     badge: null,
     createInstance: () => new SplitTool()
   },
@@ -72,12 +72,12 @@ const TOOLS_CONFIG = [
       es: 'Organizar Páginas'
     },
     description: {
-      pt: 'Reordene visualmente, gire ou exclua páginas com miniaturas interativas.',
-      en: 'Visually reorder, rotate, or delete pages with interactive canvas thumbnails.',
-      es: 'Reordena visualmente, gira o elimina páginas con miniaturas interactivas.'
+      pt: 'Reordene visualmente, gire em 90° ou exclua páginas com miniaturas interativas.',
+      en: 'Visually reorder, rotate 90°, or delete pages with interactive canvas thumbnails.',
+      es: 'Reordena visualmente, gira 90° o elimina páginas con miniaturas interactivas.'
     },
     icon: 'layout-grid',
-    color: 'from-purple-500 to-pink-600',
+    iconBg: 'bg-purple-50 text-purple-700',
     badge: { pt: 'Visual', en: 'Visual', es: 'Visual' },
     createInstance: () => new OrganizeTool()
   },
@@ -94,7 +94,7 @@ const TOOLS_CONFIG = [
       es: 'Convierte imágenes JPG, PNG o WebP en PDF con márgenes ajustables.'
     },
     icon: 'image',
-    color: 'from-emerald-500 to-teal-600',
+    iconBg: 'bg-emerald-50 text-emerald-700',
     badge: null,
     createInstance: () => new ImgToPdfTool()
   },
@@ -111,7 +111,7 @@ const TOOLS_CONFIG = [
       es: 'Exporta cada página del PDF en imágenes PNG o JPG de alta resolución.'
     },
     icon: 'file-image',
-    color: 'from-rose-500 to-red-600',
+    iconBg: 'bg-rose-50 text-rose-700',
     badge: null,
     createInstance: () => new PdfToImgTool()
   },
@@ -128,7 +128,7 @@ const TOOLS_CONFIG = [
       es: 'Inserta sellos de texto (Confidencial, Borrador) en todo el documento.'
     },
     icon: 'stamp',
-    color: 'from-cyan-500 to-blue-600',
+    iconBg: 'bg-cyan-50 text-cyan-700',
     badge: null,
     createInstance: () => new WatermarkTool()
   },
@@ -145,7 +145,7 @@ const TOOLS_CONFIG = [
       es: 'Inserta números de página en el pie de página o encabezado automáticamente.'
     },
     icon: 'hash',
-    color: 'from-violet-500 to-indigo-600',
+    iconBg: 'bg-slate-100 text-slate-700',
     badge: null,
     createInstance: () => new PageNumbersTool()
   }
@@ -201,9 +201,9 @@ class App {
     document.querySelectorAll('.lang-btn').forEach(btn => {
       const lang = btn.getAttribute('data-lang');
       if (lang === currentLang) {
-        btn.className = 'lang-btn px-2.5 py-1 text-xs font-bold rounded-lg transition bg-white shadow-xs text-purple-700';
+        btn.className = 'lang-btn px-2.5 py-1 text-xs font-bold rounded-lg transition bg-white shadow-xs text-slate-900';
       } else {
-        btn.className = 'lang-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition text-slate-500 hover:text-slate-900';
+        btn.className = 'lang-btn px-2.5 py-1 text-xs font-medium rounded-lg transition text-slate-500 hover:text-slate-900';
       }
     });
 
@@ -278,25 +278,25 @@ class App {
       const badge = tool.badge ? (tool.badge[lang] || tool.badge['pt']) : null;
 
       return `
-        <div class="tool-card group relative bg-white border border-slate-200/90 hover:border-purple-400 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between" data-tool-id="${tool.id}">
+        <div class="tool-card group relative bg-white border border-slate-200 hover:border-slate-900 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between" data-tool-id="${tool.id}">
           <div>
-            <div class="flex items-center justify-between mb-5">
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr ${tool.color} flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
-                <i data-lucide="${tool.icon}" class="w-7 h-7"></i>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl ${tool.iconBg || 'bg-slate-100 text-slate-800'} flex items-center justify-center group-hover:scale-105 transition-transform">
+                <i data-lucide="${tool.icon}" class="w-5 h-5"></i>
               </div>
               ${badge ? `
-                <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+                <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                   ${badge}
                 </span>
               ` : ''}
             </div>
-            <h3 class="text-base font-bold text-slate-800 group-hover:text-purple-700 transition-colors">${name}</h3>
-            <p class="text-xs text-slate-500 mt-2 leading-relaxed">${desc}</p>
+            <h3 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">${name}</h3>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${desc}</p>
           </div>
           
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-400 group-hover:text-purple-600 transition-colors">
+          <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-400 group-hover:text-slate-900 transition-colors">
             <span>${t('toolOpen')}</span>
-            <i data-lucide="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform"></i>
           </div>
         </div>
       `;

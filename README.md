@@ -1,7 +1,7 @@
 # ⚡ PDFX — By LaBiOmicS
 
 > **O Canivete Suíço de PDF 100% no Navegador**  
-> Desenvolvido pelo **LaBiOmicS** (Laboratório de Bioinformática e Ômicas)  
+> Desenvolvido pelo **LaBiOmicS** (Laboratório de Bioinformática e Ciências Ômicas)  
 > Multilíngue nativo: **Português (PT)**, **Inglês (EN)** e **Espanhol (ES)**.
 
 🌐 **Acesse a aplicação ao vivo:**  

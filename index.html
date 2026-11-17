@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDFX — O Canivete Suíço de PDF do LaBiOmicS</title>
-  <meta name="description" content="PDFX: Edite textos, aplique tarjas pretas de censura, faça comentários, junte, divida e converta PDFs diretamente no seu navegador. Desenvolvido pelo LaBiOmicS.">
+  <title>PDFX — Laboratório de Bioinformática e Ciências Ômicas (LaBiOmicS)</title>
+  <meta name="description" content="PDFX: Ferramentas profissionais de PDF que rodam 100% no navegador. Desenvolvido pelo LaBiOmicS (Laboratório de Bioinformática e Ciências Ômicas).">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,12 +14,11 @@
         extend: {
           colors: {
             brand: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-              900: '#4c1d95'
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617'
             }
           }
         }
@@ -37,164 +36,165 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-purple-100 selection:text-purple-900">
+<body class="bg-slate-50/60 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white">
 
-  <!-- Top Announcement Bar -->
-  <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white text-[11px] font-semibold py-1.5 px-4 text-center flex items-center justify-center gap-2">
-    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-    <span data-i18n="developedBy">Desenvolvido pelo LaBiOmicS</span>
-    <span class="opacity-60">•</span>
-    <span data-i18n="privacyBadge">100% Local no Navegador • Sem Servidores</span>
+  <!-- Top Institutional Bar -->
+  <div class="bg-slate-950 text-slate-300 text-[11px] font-medium py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-white font-semibold tracking-wide">LaBiOmicS</span>
+        <span class="text-slate-500">—</span>
+        <span class="text-slate-300 font-normal">Laboratório de Bioinformática e Ciências Ômicas</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400 text-[10px] uppercase tracking-wider">
+        <span>Segurança de Dados</span>
+        <span>•</span>
+        <span>Conformidade LGPD</span>
+        <span>•</span>
+        <span>100% No Navegador</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Navigation Bar -->
-  <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200">
+  <!-- Main Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Back Button -->
       <div class="flex items-center gap-3">
-        <!-- Back Button (Shown when in a tool view) -->
         <button id="nav-back-button" class="btn-home hidden p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition" title="Voltar ao início">
           <i data-lucide="arrow-left" class="w-5 h-5"></i>
         </button>
 
-        <!-- Brand Logo -->
-        <a href="#" class="btn-home flex items-center gap-2.5 group">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-            <span class="font-black text-xl tracking-tighter">X</span>
+        <a href="#" class="btn-home flex items-center gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-slate-950 flex items-center justify-center text-white shadow-sm group-hover:bg-indigo-600 transition">
+            <span class="font-mono font-bold text-base tracking-tighter">X</span>
           </div>
           <div class="flex flex-col">
-            <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-purple-950 to-indigo-900 bg-clip-text text-transparent">PDFX</span>
-              <span class="text-[9px] font-black tracking-widest px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 uppercase">LaBiOmicS</span>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-lg tracking-tight text-slate-900">PDFX</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                LaBiOmicS
+              </span>
             </div>
           </div>
         </a>
       </div>
 
-      <!-- Right Nav Status & Language Switcher -->
+      <!-- Right Nav: Language Segmented Control & GitHub -->
       <div class="flex items-center gap-3">
-        <!-- Language Selector -->
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200" id="lang-switcher">
-          <button class="lang-btn px-2.5 py-1 text-xs font-bold rounded-lg transition" data-lang="pt">PT 🇧🇷</button>
-          <button class="lang-btn px-2.5 py-1 text-xs font-bold rounded-lg transition" data-lang="en">EN 🇺🇸</button>
-          <button class="lang-btn px-2.5 py-1 text-xs font-bold rounded-lg transition" data-lang="es">ES 🇪🇸</button>
+        <!-- Minimalist Language Control -->
+        <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200" id="lang-switcher">
+          <button class="lang-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition" data-lang="pt">PT</button>
+          <button class="lang-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition" data-lang="en">EN</button>
+          <button class="lang-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition" data-lang="es">ES</button>
         </div>
 
-        <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition">
+        <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition">
           <i data-lucide="github" class="w-4 h-4"></i>
-          <span>GitHub</span>
+          <span class="hidden sm:inline">Repositório</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- Main View Container -->
-  <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+  <main class="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
     
     <!-- DASHBOARD VIEW -->
     <div id="dashboard-view" class="space-y-12">
-      <!-- High-Impact Hero Banner -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-purple-50/70 via-white to-slate-50 border border-purple-100/80 p-8 sm:p-14 shadow-sm text-center">
-        <!-- Decorative blurred spheres -->
-        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute top-1/2 -left-20 w-72 h-72 bg-indigo-300/20 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-3xl mx-auto space-y-5">
-          <!-- Lab Pill Badge -->
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-purple-200 shadow-sm text-purple-800 text-xs font-bold">
-            <span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
-            <span data-i18n="developedBy">Desenvolvido pelo LaBiOmicS</span>
+      
+      <!-- Sleek, Modern, High-Class Hero -->
+      <div class="relative py-8 sm:py-12 border-b border-slate-200/80">
+        <div class="max-w-4xl mx-auto text-center space-y-5">
+          
+          <!-- Institutional pill -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-medium shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Laboratório de Bioinformática e Ciências Ômicas</span>
             <span class="text-slate-300">•</span>
-            <span class="text-slate-600 font-medium" data-i18n="privacyBadge">100% Local</span>
+            <span class="text-slate-500" data-i18n="heroBadge">Privacidade Absoluta & LGPD</span>
           </div>
 
-          <!-- Main Title -->
-          <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-            <span data-i18n="heroTitle">O canivete suíço para seus PDFs,</span><br/>
-            <span class="bg-gradient-to-r from-purple-600 via-indigo-600 to-rose-600 bg-clip-text text-transparent" data-i18n="heroTitleHighlight">rápido, privado e sem limites.</span>
+          <!-- Main Hero Heading -->
+          <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.18]">
+            <span data-i18n="heroTitle">Manipulação profissional de PDF,</span><br/>
+            <span class="text-slate-400 font-extrabold" data-i18n="heroTitleSub">privada, instantânea e sem servidor.</span>
           </h1>
 
-          <!-- Subtitle -->
+          <!-- Concise Subtitle -->
           <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed" data-i18n="heroSubtitle">
-            Edite textos, aplique tarjas pretas de censura, faça comentários, junte, divida e converta documentos diretamente no navegador. 100% gratuito e seguro.
+            Edite textos, marque trechos importantes, aplique tarjas de censura, junte, divida e organize páginas. Seus documentos nunca saem do seu navegador.
           </p>
 
-          <!-- Metrics Row -->
-          <div class="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl mx-auto text-left">
-            <div class="bg-white/90 backdrop-blur p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-              <div class="flex items-center gap-2 text-purple-600 mb-1">
-                <i data-lucide="shield-check" class="w-4 h-4"></i>
-                <span class="text-xs font-bold" data-i18n="heroStatsLocal">100% Local</span>
-              </div>
-              <p class="text-[11px] text-slate-500" data-i18n="heroStatsLocalSub">Sem upload para a nuvem</p>
+          <!-- Core Pillars (Clean, unbloated) -->
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-500">
+            <div class="flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+              <span>100% Processamento Local</span>
             </div>
-
-            <div class="bg-white/90 backdrop-blur p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-              <div class="flex items-center gap-2 text-indigo-600 mb-1">
-                <i data-lucide="zap" class="w-4 h-4"></i>
-                <span class="text-xs font-bold">Ultra Rápido</span>
-              </div>
-              <p class="text-[11px] text-slate-500">Memória do navegador</p>
+            <div class="flex items-center gap-2">
+              <i data-lucide="lock" class="w-4 h-4 text-slate-700"></i>
+              <span>Zero Upload para Servidores</span>
             </div>
-
-            <div class="bg-white/90 backdrop-blur p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-              <div class="flex items-center gap-2 text-emerald-600 mb-1">
-                <i data-lucide="sparkles" class="w-4 h-4"></i>
-                <span class="text-xs font-bold" data-i18n="heroStatsCost">Zero Custo</span>
-              </div>
-              <p class="text-[11px] text-slate-500" data-i18n="heroStatsCostSub">Livre e sem assinaturas</p>
-            </div>
-
-            <div class="bg-white/90 backdrop-blur p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
-              <div class="flex items-center gap-2 text-rose-600 mb-1">
-                <i data-lucide="globe" class="w-4 h-4"></i>
-                <span class="text-xs font-bold" data-i18n="heroStatsLang">3 Idiomas</span>
-              </div>
-              <p class="text-[11px] text-slate-500" data-i18n="heroStatsLangSub">PT, EN & ES nativos</p>
+            <div class="flex items-center gap-2">
+              <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
+              <span>Sem Limites ou Assinaturas</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Tools Grid -->
-      <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <!-- Rendered dynamically by app.js -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
+            Ferramentas Disponíveis
+          </h2>
+          <span class="text-xs text-slate-400">8 módulos prontos</span>
+        </div>
+
+        <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <!-- Rendered dynamically by app.js -->
+        </div>
       </div>
 
-      <!-- Security & Privacy Guarantee Section -->
-      <div class="bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="space-y-2">
-            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-purple-300">
-              <i data-lucide="lock" class="w-5 h-5"></i>
+      <!-- Institutional Assurance Banner -->
+      <div class="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <i data-lucide="shield" class="w-4 h-4 text-indigo-600"></i>
+              <span>Sigilo para Pesquisa & Saúde</span>
             </div>
-            <h4 class="font-bold text-base text-white">Privacidade & Conformidade</h4>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Ideal para documentos jurídicos, clínicos ou confidenciais (LGPD / GDPR). Nenhum byte sai do seu computador.
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Criado para atender às demandas de confidencialidade de artigos científicos, prontuários e dados genômicos no ambiente acadêmico.
             </p>
           </div>
 
-          <div class="space-y-2">
-            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-indigo-300">
-              <i data-lucide="dna" class="w-5 h-5"></i>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <i data-lucide="cpu" class="w-4 h-4 text-indigo-600"></i>
+              <span>Computação Client-Side</span>
             </div>
-            <h4 class="font-bold text-base text-white">Criado pelo LaBiOmicS</h4>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Iniciativa de código aberto do Laboratório de Bioinformática e Ômicas para ferramentas científicas e acadêmicas de alta produtividade.
+            <p class="text-xs text-slate-500 leading-relaxed">
+              A manipulação matemática dos arquivos acontece estritamente na memória RAM do seu navegador via WebAssembly e JavaScript.
             </p>
           </div>
 
-          <div class="space-y-2">
-            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-rose-300">
-              <i data-lucide="infinity" class="w-5 h-5"></i>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <i data-lucide="code" class="w-4 h-4 text-indigo-600"></i>
+              <span>Código Aberto LaBiOmicS</span>
             </div>
-            <h4 class="font-bold text-base text-white">Sem Planos ou Limites</h4>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Use sem limites de tamanho ou de quantidade diária. 100% gratuito e hospedado permanentemente no GitHub Pages.
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Disponível publicamente no GitHub sob licença aberta para auditoria, colaboração e hospedagem própria sem custo.
             </p>
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- TOOL VIEW (Swapped dynamically) -->
@@ -205,21 +205,20 @@
   </main>
 
   <!-- Global Footer -->
-  <footer class="border-t border-slate-200 bg-white py-8 mt-12 text-center text-xs text-slate-500">
+  <footer class="border-t border-slate-200/80 bg-white py-8 mt-16 text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="font-black text-slate-800 text-sm">PDFX</span>
-        <span>•</span>
-        <span data-i18n="developedBy">Desenvolvido pelo LaBiOmicS</span>
-        <span class="text-slate-400">(Laboratório de Bioinformática e Ômicas)</span>
+      <div class="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+        <span class="font-extrabold text-slate-800">PDFX</span>
+        <span class="hidden sm:inline text-slate-300">•</span>
+        <span>Desenvolvido pelo <strong>LaBiOmicS</strong> — Laboratório de Bioinformática e Ciências Ômicas</span>
       </div>
-      <div class="flex items-center gap-4 font-semibold text-slate-600">
-        <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="hover:text-purple-600 transition flex items-center gap-1">
-          <i data-lucide="github" class="w-3.5 h-3.5"></i>
-          <span>Repositório GitHub</span>
+      <div class="flex items-center gap-4 font-medium text-slate-600">
+        <a href="https://github.com/LaBiOmicS/pdfx" target="_blank" rel="noopener" class="hover:text-slate-900 transition flex items-center gap-1">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub</span>
         </a>
         <span>•</span>
-        <span>Client-Side Open Source</span>
+        <span>100% Client-Side</span>
       </div>
     </div>
   </footer>
@@ -228,17 +227,17 @@
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3 pointer-events-auto max-w-sm"></div>
 
   <!-- Loading Modal Indicator -->
-  <div id="loading-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center">
-    <div class="bg-white rounded-3xl p-6 max-w-sm w-full mx-4 shadow-2xl flex flex-col items-center text-center space-y-4">
-      <div class="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
-        <svg class="animate-spin h-8 w-8 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+  <div id="loading-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs hidden items-center justify-center">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl flex flex-col items-center text-center space-y-4 border border-slate-200">
+      <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-800">
+        <svg class="animate-spin h-6 w-6 text-slate-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
       </div>
       <div>
-        <h3 class="text-base font-bold text-slate-800" data-i18n="processing">Processando...</h3>
-        <p id="loading-text" class="text-xs text-slate-500 mt-1" data-i18n="waitMoment">Aguarde alguns instantes enquanto o arquivo é gerado.</p>
+        <h3 class="text-sm font-bold text-slate-900" data-i18n="processing">Processando documento...</h3>
+        <p id="loading-text" class="text-xs text-slate-500 mt-1" data-i18n="waitMoment">Aguarde alguns segundos enquanto o arquivo é gerado.</p>
       </div>
     </div>
   </div>
