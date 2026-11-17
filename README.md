@@ -9,7 +9,12 @@ Ferramenta completa de manipulação e edição de PDF inspirada no iLovePDF, de
 
 ## 🌟 Principais Funcionalidades
 
-1. **Editar PDF (Inserir Texto & Tarjas)**: Adicione caixas de texto editáveis e arrastáveis diretamente sobre as páginas do PDF, configure tamanho da fonte, cores, negrito e tarjas brancas (whiteout/redact) para preencher documentos e formulários.
+1. **Editar PDF (Texto, Tarjas & Comentários)**:
+   - **Tarjas Pretas de Censura (Redact)**: Oculte permanentemente dados sensíveis (CPF, endereços, nomes) com tarjas opacas redimensionáveis.
+   - **Tarjas Brancas (Apagar)**: Cubra e apague textos indesejados sobre papel branco.
+   - **Notas e Comentários (Post-it)**: Insira notas adesivas de revisão com cabeçalho estilizado e observações em qualquer parte do documento.
+   - **Caixas de Texto Livres**: Digite sobre o PDF com controle de fonte, cores, negrito e redimensionamento interativo.
+   - **Marca-Texto**: Realce linhas e trechos importantes com faixa amarela semitransparente.
 2. **Juntar PDFs (Merge)**: Combine múltiplos arquivos PDF na ordem que desejar, com arrastar-e-soltar.
 3. **Dividir PDF (Split)**: Separe por intervalos específicos (ex: `1-3, 5, 8-10`) ou extraia todas as páginas individuais em um pacote `.ZIP`.
 4. **Organizar Páginas (Visual Organize)**: Visualize miniaturas de todas as páginas renderizadas via canvas, reordene arrastando os cards (drag & drop), gire em $90^\circ$ ou exclua páginas indesejadas.

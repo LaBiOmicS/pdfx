@@ -13,9 +13,9 @@ import { PageNumbersTool } from './tools/pageNumbers.js';
 const TOOLS_CONFIG = [
   {
     id: 'edit-pdf',
-    name: 'Editar PDF (Inserir Texto)',
-    description: 'Adicione caixas de texto editáveis, tarjas brancas e preencha formulários no documento.',
-    icon: 'type',
+    name: 'Editar PDF (Texto, Tarjas & Notas)',
+    description: 'Insira textos, tarjas pretas de censura, tarjas brancas e notas adesivas de comentários.',
+    icon: 'edit-3',
     color: 'from-rose-500 to-indigo-600',
     badge: 'Essencial',
     createInstance: () => new EditPdfTool()
