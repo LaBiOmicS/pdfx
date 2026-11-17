@@ -1,9 +1,9 @@
-/* Custom CSS for PDF Studio Web */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Custom CSS for PDFX */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
 }
 
 body {
@@ -17,14 +17,14 @@ body {
 
 /* Custom Drag & Drop Animations */
 .dropzone-active {
-  border-color: #4f46e5 !important;
+  border-color: #7c3aed !important;
   background-color: #f5f3ff !important;
   transform: scale(1.01);
 }
 
 .sortable-ghost {
   opacity: 0.35;
-  border: 2px dashed #4f46e5 !important;
+  border: 2px dashed #7c3aed !important;
 }
 
 .sortable-chosen {
@@ -67,12 +67,17 @@ body {
   background: #94a3b8;
 }
 
-/* Pulsing Badge for 100% Client-Side Privacy */
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
+/* Editor Canvas Elements */
+#canvas-scroll-container {
+  scroll-behavior: smooth;
 }
 
-.animate-pulse-soft {
-  animation: pulse-soft 2.5s infinite ease-in-out;
+.ann-textarea {
+  font-family: inherit;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.ann-textarea:focus {
+  outline: none;
 }

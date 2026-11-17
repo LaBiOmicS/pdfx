@@ -1,5 +1,6 @@
 /**
- * Ferramenta: Editar PDF — Inserir Textos, Tarjas (Preta/Branca) e Comentários
+ * Ferramenta: Editar PDF — Textos, Substituição, Marca-Texto, Tarjas e Notas
+ * Suporte completo a i18n (PT, EN, ES)
  */
 import { readFileAsArrayBuffer, downloadBlob, formatBytes, notify, setLoading } from '../utils.js';
 import { t } from '../i18n.js';
@@ -18,7 +19,7 @@ export class EditPdfTool {
     this.currentViewport = null;
 
     // Annotations map: pageNumber (1-based) -> Array of annotations
-    // Types: 'text' | 'redact_black' | 'redact_white' | 'comment' | 'highlight'
+    // Types: 'text' | 'replace_text' | 'highlight' | 'redact_black' | 'redact_white' | 'comment'
     this.annotations = {};
     this.activeAnnotationId = null;
   }
@@ -30,7 +31,7 @@ export class EditPdfTool {
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200">
           <div>
             <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-              <i data-lucide="edit-3" class="w-7 h-7 text-indigo-600"></i>
+              <i data-lucide="edit-3" class="w-7 h-7 text-purple-600"></i>
               ${t('editTitle')}
             </h2>
             <p class="text-sm text-slate-500 mt-0.5">${t('editSubtitle')}</p>
@@ -66,34 +67,45 @@ export class EditPdfTool {
           <div class="bg-white p-3 border border-slate-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-2.5">
             <!-- Left Action Tools -->
             <div class="flex flex-wrap items-center gap-2">
-              <button id="btn-add-text" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold text-xs flex items-center gap-1.5 transition">
+              <!-- Marca-Texto Prominente -->
+              <button id="btn-add-highlight" class="px-3.5 py-2 rounded-xl bg-yellow-100 hover:bg-yellow-200 text-yellow-900 font-bold text-xs flex items-center gap-1.5 transition border border-yellow-300 shadow-xs">
+                <i data-lucide="highlighter" class="w-4 h-4 text-yellow-700"></i>
+                <span>🖍️ ${t('btnHighlight')}</span>
+              </button>
+
+              <!-- Substituir Texto (Fundo Branco para apagar e redigitar) -->
+              <button id="btn-add-replace-text" class="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-semibold text-xs flex items-center gap-1.5 transition border border-purple-200">
+                <i data-lucide="replace" class="w-4 h-4 text-purple-600"></i>
+                <span>${t('btnReplaceText')}</span>
+              </button>
+
+              <!-- Texto Livre -->
+              <button id="btn-add-text" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition">
                 <i data-lucide="type" class="w-4 h-4"></i>
                 <span>${t('btnAddText')}</span>
               </button>
               
-              <button id="btn-add-redact-black" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-sm">
+              <!-- Tarja Preta -->
+              <button id="btn-add-redact-black" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-sm">
                 <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
                 <span>${t('btnRedactBlack')}</span>
               </button>
 
-              <button id="btn-add-redact-white" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition border border-slate-200">
+              <!-- Tarja Branca -->
+              <button id="btn-add-redact-white" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition border border-slate-200">
                 <i data-lucide="square" class="w-4 h-4"></i>
                 <span>${t('btnRedactWhite')}</span>
               </button>
 
-              <button id="btn-add-comment" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs flex items-center gap-1.5 transition border border-amber-200">
+              <!-- Comentário / Post-it -->
+              <button id="btn-add-comment" class="px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs flex items-center gap-1.5 transition border border-amber-200">
                 <i data-lucide="message-square" class="w-4 h-4 text-amber-600"></i>
                 <span>${t('btnAddComment')}</span>
-              </button>
-
-              <button id="btn-add-highlight" class="px-3 py-1.5 rounded-xl bg-yellow-50 hover:bg-yellow-100 text-yellow-800 font-semibold text-xs flex items-center gap-1.5 transition border border-yellow-200">
-                <i data-lucide="highlighter" class="w-4 h-4 text-yellow-600"></i>
-                <span>${t('btnHighlight')}</span>
               </button>
             </div>
 
             <!-- Page Navigation -->
-            <div class="flex items-center gap-2 bg-slate-50 px-3 py-1 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
+            <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700">
               <button id="btn-prev-page" class="p-1 hover:bg-white rounded-lg transition disabled:opacity-30">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
               </button>
@@ -121,11 +133,12 @@ export class EditPdfTool {
           </div>
 
           <!-- Formatting Properties Bar -->
-          <div id="formatting-bar" class="bg-purple-50/60 p-2.5 border border-purple-100 rounded-xl flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
+          <div id="formatting-bar" class="bg-purple-50/70 p-2.5 border border-purple-100 rounded-xl flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-700">
             <span class="text-purple-800 font-bold flex items-center gap-1">
               <i data-lucide="sliders" class="w-3.5 h-3.5"></i> ${t('propFormat')}
             </span>
             
+            <!-- Font Size -->
             <div id="prop-font-group" class="flex items-center gap-1.5">
               <span>${t('propFontSize')}</span>
               <select id="prop-font-size" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs">
@@ -140,14 +153,36 @@ export class EditPdfTool {
               </select>
             </div>
 
+            <!-- Text Color -->
             <div id="prop-color-group" class="flex items-center gap-1.5">
               <span>${t('propColor')}</span>
               <input type="color" id="prop-color" value="#000000" class="w-7 h-7 p-0.5 border border-slate-300 rounded cursor-pointer bg-white">
             </div>
 
+            <!-- Bold Button -->
             <button id="prop-toggle-bold" class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-bold text-slate-700 hover:bg-slate-100 transition" title="Alternar Negrito">
               B
             </button>
+
+            <!-- Background Option (Transparent vs White to cover original) -->
+            <div id="prop-bg-group" class="flex items-center gap-1.5">
+              <span>${t('propBgLabel')}</span>
+              <select id="prop-bg-select" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs">
+                <option value="transparent">${t('propBgTransparent')}</option>
+                <option value="white">${t('propBgWhite')}</option>
+              </select>
+            </div>
+
+            <!-- Highlighter Color Presets (shown when highlight is selected) -->
+            <div id="prop-highlight-colors" class="hidden flex items-center gap-1.5">
+              <span>Cor do Marca-Texto:</span>
+              <div class="flex items-center gap-1">
+                <button class="hl-color-btn w-6 h-6 rounded-full bg-yellow-300 border-2 border-yellow-500 shadow-xs" data-color="yellow" title="Amarelo"></button>
+                <button class="hl-color-btn w-6 h-6 rounded-full bg-emerald-300 border-2 border-slate-300 shadow-xs" data-color="green" title="Verde"></button>
+                <button class="hl-color-btn w-6 h-6 rounded-full bg-pink-300 border-2 border-slate-300 shadow-xs" data-color="pink" title="Rosa"></button>
+                <button class="hl-color-btn w-6 h-6 rounded-full bg-cyan-300 border-2 border-slate-300 shadow-xs" data-color="blue" title="Azul"></button>
+              </div>
+            </div>
 
             <button id="btn-delete-active-box" class="ml-auto text-rose-600 hover:text-rose-800 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-100 transition font-semibold">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -155,12 +190,12 @@ export class EditPdfTool {
             </button>
           </div>
 
-          <!-- Canvas Page Stage with Scrollable Area -->
-          <div class="relative bg-slate-200/70 p-6 rounded-3xl overflow-auto max-h-[75vh] flex items-center justify-center">
-            <div id="page-stage-container" class="relative bg-white shadow-2xl rounded transition-transform origin-top">
+          <!-- Canvas Page Stage with Proper Scroll (NO flex items-center clipping) -->
+          <div id="canvas-scroll-container" class="relative bg-slate-200/80 p-6 rounded-3xl overflow-auto max-h-[78vh] text-center">
+            <div id="page-stage-container" class="relative bg-white shadow-2xl rounded mx-auto my-0 transition-transform origin-top text-left inline-block">
               <canvas id="pdf-page-canvas" class="block"></canvas>
               <!-- Annotations overlay layer exactly matching canvas dimensions -->
-              <div id="annotations-layer" class="absolute inset-0 select-none overflow-hidden"></div>
+              <div id="annotations-layer" class="absolute inset-0 overflow-visible pointer-events-none"></div>
             </div>
           </div>
 
@@ -179,12 +214,16 @@ export class EditPdfTool {
   bindEvents() {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
+    
+    // Tools buttons
     const addTextBtn = document.getElementById('btn-add-text');
+    const addReplaceTextBtn = document.getElementById('btn-add-replace-text');
+    const addHighlightBtn = document.getElementById('btn-add-highlight');
     const addRedactBlackBtn = document.getElementById('btn-add-redact-black');
     const addRedactWhiteBtn = document.getElementById('btn-add-redact-white');
     const addCommentBtn = document.getElementById('btn-add-comment');
-    const addHighlightBtn = document.getElementById('btn-add-highlight');
     
+    // Navigation
     const prevPageBtn = document.getElementById('btn-prev-page');
     const nextPageBtn = document.getElementById('btn-next-page');
     const zoomInBtn = document.getElementById('btn-zoom-in');
@@ -197,6 +236,7 @@ export class EditPdfTool {
     const propFontSize = document.getElementById('prop-font-size');
     const propColor = document.getElementById('prop-color');
     const propBold = document.getElementById('prop-toggle-bold');
+    const propBgSelect = document.getElementById('prop-bg-select');
 
     dropzone.addEventListener('click', () => fileInput.click());
 
@@ -237,11 +277,12 @@ export class EditPdfTool {
     });
 
     // Add buttons
+    addHighlightBtn?.addEventListener('click', () => this.addAnnotation('highlight'));
+    addReplaceTextBtn?.addEventListener('click', () => this.addAnnotation('replace_text'));
     addTextBtn?.addEventListener('click', () => this.addAnnotation('text'));
     addRedactBlackBtn?.addEventListener('click', () => this.addAnnotation('redact_black'));
     addRedactWhiteBtn?.addEventListener('click', () => this.addAnnotation('redact_white'));
     addCommentBtn?.addEventListener('click', () => this.addAnnotation('comment'));
-    addHighlightBtn?.addEventListener('click', () => this.addAnnotation('highlight'));
 
     prevPageBtn?.addEventListener('click', () => {
       if (this.currentPage > 1) {
@@ -298,6 +339,26 @@ export class EditPdfTool {
       }
     });
 
+    propBgSelect?.addEventListener('change', (e) => {
+      const active = this.getActiveAnnotation();
+      if (active) {
+        active.bgType = e.target.value;
+        this.renderAnnotationsForPage();
+      }
+    });
+
+    // Highlighter preset color buttons
+    document.querySelectorAll('.hl-color-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const color = e.currentTarget.getAttribute('data-color');
+        const active = this.getActiveAnnotation();
+        if (active && active.type === 'highlight') {
+          active.highlightColor = color;
+          this.renderAnnotationsForPage();
+        }
+      });
+    });
+
     deleteActiveBtn?.addEventListener('click', () => {
       if (this.activeAnnotationId) {
         const pageList = this.annotations[this.currentPage] || [];
@@ -345,7 +406,7 @@ export class EditPdfTool {
       document.getElementById('btn-save-edited-pdf').disabled = false;
 
       await this.renderCurrentPage();
-      notify('PDF pronto! Escolha uma ferramenta na barra superior.', 'success');
+      notify('PDF carregado com sucesso! Escolha uma ferramenta acima.', 'success');
     } catch (err) {
       console.error(err);
       notify(`Erro ao carregar PDF: ${err.message || err}`, 'error');
@@ -385,6 +446,11 @@ export class EditPdfTool {
       document.getElementById('btn-next-page').disabled = this.currentPage >= this.totalPages;
 
       this.renderAnnotationsForPage();
+
+      // Ensure scroll container starts at top
+      const scrollEl = document.getElementById('canvas-scroll-container');
+      if (scrollEl) scrollEl.scrollTop = 0;
+
     } catch (e) {
       console.error(e);
       notify('Erro ao renderizar página', 'error');
@@ -399,33 +465,38 @@ export class EditPdfTool {
     }
 
     const id = 'ann_' + Date.now();
-    let width = 200, height = 50, text = '', fontSize = 14, color = '#000000', isBold = false;
+    let width = 200, height = 45, text = '', fontSize = 14, color = '#000000', isBold = false, bgType = 'transparent', highlightColor = 'yellow';
 
-    if (type === 'redact_black') {
-      width = 160;
+    if (type === 'highlight') {
+      width = 240;
       height = 24;
+      highlightColor = 'yellow';
+    } else if (type === 'replace_text') {
+      width = 200;
+      height = 42;
+      text = 'Novo texto...';
+      fontSize = 14;
+      bgType = 'white'; // Covers original text!
+    } else if (type === 'text') {
+      width = 200;
+      height = 42;
+      text = 'Digite aqui...';
+      fontSize = 14;
+      bgType = 'transparent';
+    } else if (type === 'redact_black') {
+      width = 160;
+      height = 26;
       text = '';
     } else if (type === 'redact_white') {
       width = 160;
-      height = 24;
+      height = 26;
       text = '';
     } else if (type === 'comment') {
       width = 220;
       height = 95;
-      text = 'Adicione seu comentário ou observação aqui...';
+      text = 'Digite sua observação...';
       fontSize = 12;
       color = '#78350f';
-    } else if (type === 'highlight') {
-      width = 180;
-      height = 22;
-      text = '';
-    } else {
-      // Regular text
-      width = 220;
-      height = 50;
-      text = 'Digite seu texto aqui...';
-      fontSize = 14;
-      color = '#000000';
     }
 
     const newBox = {
@@ -438,7 +509,9 @@ export class EditPdfTool {
       text,
       fontSize,
       color,
-      isBold
+      isBold,
+      bgType,
+      highlightColor
     };
 
     this.annotations[this.currentPage].push(newBox);
@@ -446,11 +519,12 @@ export class EditPdfTool {
     this.renderAnnotationsForPage();
 
     const messages = {
-      redact_black: 'Tarja preta de censura adicionada. Arraste e estique pelo canto ◢.',
+      highlight: 'Marca-texto adicionado! Posicione sobre o texto e estique pela quina ◢.',
+      replace_text: 'Substituição de texto adicionada! Fundo branco ativado para cobrir o texto antigo.',
+      text: 'Caixa de texto adicionada!',
+      redact_black: 'Tarja preta de censura adicionada.',
       redact_white: 'Tarja branca para apagar adicionada.',
-      comment: 'Nota de comentário adicionada! Digite sua observação.',
-      highlight: 'Marca-texto adicionado.',
-      text: 'Caixa de texto adicionada! Clique para digitar.'
+      comment: 'Nota adesiva de comentário adicionada.'
     };
     notify(messages[type] || 'Item adicionado.', 'info');
   }
@@ -480,9 +554,31 @@ export class EditPdfTool {
 
       let innerContent = '';
 
-      if (ann.type === 'redact_black') {
-        box.className = `absolute select-none bg-black rounded shadow-md group ${
-          isActive ? 'ring-2 ring-indigo-500' : 'hover:ring-1 hover:ring-slate-400'
+      if (ann.type === 'highlight') {
+        const bgClasses = {
+          yellow: 'bg-yellow-300/50 border-yellow-400',
+          green: 'bg-emerald-300/50 border-emerald-400',
+          pink: 'bg-pink-300/50 border-pink-400',
+          blue: 'bg-cyan-300/50 border-cyan-400'
+        };
+        const activeClass = bgClasses[ann.highlightColor || 'yellow'] || bgClasses.yellow;
+
+        box.className = `absolute pointer-events-auto select-none rounded border ${activeClass} shadow-xs group ${
+          isActive ? 'ring-2 ring-purple-600' : ''
+        }`;
+        innerContent = `
+          <div class="flex items-center justify-between px-1.5 py-0.5 bg-yellow-400/80 text-[10px] text-yellow-950 drag-handle cursor-move rounded-t font-bold">
+            <span class="flex items-center gap-1">
+              <i data-lucide="highlighter" class="w-3 h-3"></i> Marca-Texto
+            </span>
+            <button class="btn-del-ann text-yellow-950 hover:text-rose-600">
+              <i data-lucide="x" class="w-3 h-3"></i>
+            </button>
+          </div>
+        `;
+      } else if (ann.type === 'redact_black') {
+        box.className = `absolute pointer-events-auto select-none bg-black rounded shadow-md group ${
+          isActive ? 'ring-2 ring-purple-600' : 'hover:ring-1 hover:ring-slate-400'
         }`;
         innerContent = `
           <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-800 text-[10px] text-white drag-handle cursor-move rounded-t">
@@ -498,8 +594,8 @@ export class EditPdfTool {
           </div>
         `;
       } else if (ann.type === 'redact_white') {
-        box.className = `absolute select-none bg-white rounded border border-slate-300 shadow-sm group ${
-          isActive ? 'ring-2 ring-indigo-500' : 'hover:border-slate-500'
+        box.className = `absolute pointer-events-auto select-none bg-white rounded border border-slate-300 shadow-sm group ${
+          isActive ? 'ring-2 ring-purple-600' : 'hover:border-slate-500'
         }`;
         innerContent = `
           <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-100 text-[10px] text-slate-600 drag-handle cursor-move rounded-t border-b border-slate-200">
@@ -515,61 +611,53 @@ export class EditPdfTool {
           </div>
         `;
       } else if (ann.type === 'comment') {
-        // Sticky Note
-        box.className = `absolute select-none bg-amber-50 rounded-xl border border-amber-300 shadow-md group ${
-          isActive ? 'ring-2 ring-indigo-500' : 'hover:shadow-lg'
+        box.className = `absolute pointer-events-auto select-none bg-amber-50 rounded-xl border border-amber-300 shadow-md group ${
+          isActive ? 'ring-2 ring-purple-600' : 'hover:shadow-lg'
         }`;
         innerContent = `
-          <div class="flex items-center justify-between px-2 py-1 bg-amber-200/80 text-[11px] text-amber-900 drag-handle cursor-move rounded-t-xl font-bold border-b border-amber-300/60">
+          <div class="flex items-center justify-between px-2 py-1 bg-amber-200/90 text-[11px] text-amber-900 drag-handle cursor-move rounded-t-xl font-bold border-b border-amber-300/60">
             <span class="flex items-center gap-1">
-              <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-700"></i> Comentário
+              <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-700"></i> Nota de Revisão
             </span>
             <button class="btn-del-ann text-amber-700 hover:text-rose-600">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </button>
           </div>
-          <div contenteditable="true" class="ann-text-content p-2 text-xs text-amber-950 outline-none leading-relaxed break-words" style="min-height: 55px;">${ann.text}</div>
-        `;
-      } else if (ann.type === 'highlight') {
-        box.className = `absolute select-none bg-yellow-300/50 rounded border border-yellow-400/80 shadow-sm group ${
-          isActive ? 'ring-2 ring-indigo-500' : ''
-        }`;
-        innerContent = `
-          <div class="flex items-center justify-between px-1.5 py-0.5 bg-yellow-400/70 text-[10px] text-yellow-900 drag-handle cursor-move rounded-t">
-            <span class="flex items-center gap-1 font-bold">
-              <i data-lucide="highlighter" class="w-3 h-3"></i> Marca-Texto
-            </span>
-            <button class="btn-del-ann text-yellow-900 hover:text-rose-600">
-              <i data-lucide="x" class="w-3 h-3"></i>
-            </button>
+          <div class="p-1">
+            <textarea class="ann-textarea w-full bg-transparent resize-none border-none outline-none leading-relaxed text-xs text-amber-950 font-medium" rows="3">${ann.text}</textarea>
           </div>
         `;
       } else {
-        // Plain text box
-        box.className = `absolute select-none bg-transparent rounded border border-dashed border-slate-300 hover:border-slate-500 group ${
-          isActive ? 'ring-2 ring-indigo-500 bg-white/40 shadow-sm' : ''
-        }`;
+        // Plain Text or Replace Text
+        const isWhiteBg = ann.bgType === 'white' || ann.type === 'replace_text';
+        box.className = `absolute pointer-events-auto rounded shadow-xs group ${
+          isWhiteBg ? 'bg-white border border-slate-300' : 'bg-transparent border border-dashed border-slate-400/80 hover:border-purple-500'
+        } ${isActive ? 'ring-2 ring-purple-600 shadow-md' : ''}`;
+
         innerContent = `
-          <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-100/90 border-b border-slate-200/60 rounded-t text-[10px] text-slate-500 drag-handle cursor-move select-none ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}">
+          <div class="flex items-center justify-between px-1.5 py-0.5 bg-slate-100/95 border-b border-slate-200 rounded-t text-[10px] text-slate-600 drag-handle cursor-move select-none ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}">
             <span class="flex items-center gap-1 font-bold">
-              <i data-lucide="type" class="w-3 h-3"></i> Caixa de Texto
+              <i data-lucide="type" class="w-3 h-3 text-purple-600"></i>
+              ${isWhiteBg ? 'Texto (Substituir)' : 'Texto Livre'}
             </span>
             <button class="btn-del-ann text-slate-400 hover:text-rose-600">
               <i data-lucide="x" class="w-3 h-3"></i>
             </button>
           </div>
-          <div contenteditable="true" class="ann-text-content px-2 py-1 outline-none text-left break-words" style="
-            font-size: ${ann.fontSize}px;
-            color: ${ann.color};
-            font-weight: ${ann.isBold ? 'bold' : 'normal'};
-            min-height: 24px;
-          ">${ann.text}</div>
+          <div class="p-1">
+            <textarea class="ann-textarea w-full bg-transparent resize-none border-none outline-none leading-normal p-1 select-text" style="
+              font-size: ${ann.fontSize}px;
+              color: ${ann.color};
+              font-weight: ${ann.isBold ? 'bold' : 'normal'};
+              min-height: 28px;
+            ">${ann.text}</textarea>
+          </div>
         `;
       }
 
-      // Add bottom-right resize grip
+      // Resize handle on bottom-right corner
       innerContent += `
-        <div class="resize-handle absolute bottom-0 right-0 w-3.5 h-3.5 cursor-se-resize flex items-center justify-center text-slate-400 hover:text-indigo-600 font-mono text-[9px] select-none opacity-60 hover:opacity-100">
+        <div class="resize-handle absolute bottom-0 right-0 w-4 h-4 cursor-se-resize flex items-center justify-center text-slate-400 hover:text-purple-600 font-mono text-[10px] select-none opacity-60 hover:opacity-100 pointer-events-auto">
           ◢
         </div>
       `;
@@ -593,15 +681,15 @@ export class EditPdfTool {
         this.renderAnnotationsForPage();
       });
 
-      // Update text content
-      const textEl = box.querySelector('.ann-text-content');
-      if (textEl) {
-        textEl.addEventListener('input', () => {
-          ann.text = textEl.innerText;
+      // Update text from textarea
+      const textarea = box.querySelector('.ann-textarea');
+      if (textarea) {
+        textarea.addEventListener('input', () => {
+          ann.text = textarea.value;
         });
       }
 
-      // Setup Drag & Setup Resize
+      // Drag & Resize
       const dragHandle = box.querySelector('.drag-handle');
       if (dragHandle) this.setupBoxDraggable(box, dragHandle, ann);
 
@@ -616,23 +704,31 @@ export class EditPdfTool {
     const propFontSize = document.getElementById('prop-font-size');
     const propColor = document.getElementById('prop-color');
     const propBold = document.getElementById('prop-toggle-bold');
+    const propBgSelect = document.getElementById('prop-bg-select');
     const fontGroup = document.getElementById('prop-font-group');
     const colorGroup = document.getElementById('prop-color-group');
+    const bgGroup = document.getElementById('prop-bg-group');
+    const hlColorsGroup = document.getElementById('prop-highlight-colors');
 
-    // Show/hide font controls depending on annotation type
-    const hasText = ann.type === 'text' || ann.type === 'comment';
-    if (fontGroup) fontGroup.style.display = hasText ? 'flex' : 'none';
-    if (colorGroup) colorGroup.style.display = (ann.type === 'text') ? 'flex' : 'none';
-    if (propBold) propBold.style.display = hasText ? 'inline-block' : 'none';
+    const isText = ann.type === 'text' || ann.type === 'replace_text';
+    const isComment = ann.type === 'comment';
+    const isHighlight = ann.type === 'highlight';
+
+    if (fontGroup) fontGroup.style.display = (isText || isComment) ? 'flex' : 'none';
+    if (colorGroup) colorGroup.style.display = isText ? 'flex' : 'none';
+    if (propBold) propBold.style.display = isText ? 'inline-block' : 'none';
+    if (bgGroup) bgGroup.style.display = isText ? 'flex' : 'none';
+    if (hlColorsGroup) hlColorsGroup.style.display = isHighlight ? 'flex' : 'none';
 
     if (propFontSize) propFontSize.value = ann.fontSize;
     if (propColor) propColor.value = ann.color;
+    if (propBgSelect) propBgSelect.value = (ann.bgType === 'white' || ann.type === 'replace_text') ? 'white' : 'transparent';
     if (propBold) {
       if (ann.isBold) {
-        propBold.classList.add('bg-indigo-600', 'text-white');
+        propBold.classList.add('bg-purple-600', 'text-white');
         propBold.classList.remove('bg-white', 'text-slate-700');
       } else {
-        propBold.classList.remove('bg-indigo-600', 'text-white');
+        propBold.classList.remove('bg-purple-600', 'text-white');
         propBold.classList.add('bg-white', 'text-slate-700');
       }
     }
@@ -731,7 +827,7 @@ export class EditPdfTool {
   async executeSavePdf() {
     if (!this.pdfLibDoc) return;
 
-    setLoading(true, 'Aplicando tarjas, comentários e modificações...');
+    setLoading(true, 'Aplicando marca-textos, substituições e edições no PDF...');
     try {
       const fontRegular = await this.pdfLibDoc.embedFont(window.PDFLib.StandardFonts.Helvetica);
       const fontBold = await this.pdfLibDoc.embedFont(window.PDFLib.StandardFonts.HelveticaBold);
@@ -755,8 +851,24 @@ export class EditPdfTool {
           const boxW = (ann.width || 120) * scaleX;
           const boxH = (ann.height || 30) * scaleY;
 
-          if (ann.type === 'redact_black') {
-            // Permanent black redaction rectangle (covers everything underneath)
+          // 1. MARCA-TEXTO (Highlighter)
+          if (ann.type === 'highlight') {
+            let hRgb = window.PDFLib.rgb(1, 0.92, 0.2); // Amarelo
+            if (ann.highlightColor === 'green') hRgb = window.PDFLib.rgb(0.2, 0.92, 0.4);
+            if (ann.highlightColor === 'pink') hRgb = window.PDFLib.rgb(1, 0.4, 0.7);
+            if (ann.highlightColor === 'blue') hRgb = window.PDFLib.rgb(0.2, 0.8, 1);
+
+            page.drawRectangle({
+              x: boxX,
+              y: pdfHeight - boxYTop - boxH,
+              width: boxW,
+              height: boxH,
+              color: hRgb,
+              opacity: 0.42
+            });
+          }
+          // 2. TARJA PRETA (Censura / Redact)
+          else if (ann.type === 'redact_black') {
             page.drawRectangle({
               x: boxX,
               y: pdfHeight - boxYTop - boxH,
@@ -765,8 +877,9 @@ export class EditPdfTool {
               color: window.PDFLib.rgb(0, 0, 0),
               opacity: 1
             });
-          } else if (ann.type === 'redact_white') {
-            // Whiteout rectangle
+          }
+          // 3. TARJA BRANCA (Apagar / Whiteout)
+          else if (ann.type === 'redact_white') {
             page.drawRectangle({
               x: boxX,
               y: pdfHeight - boxYTop - boxH,
@@ -775,21 +888,12 @@ export class EditPdfTool {
               color: window.PDFLib.rgb(1, 1, 1),
               opacity: 1
             });
-          } else if (ann.type === 'highlight') {
-            // Semitransparent yellow highlighter
-            page.drawRectangle({
-              x: boxX,
-              y: pdfHeight - boxYTop - boxH,
-              width: boxW,
-              height: boxH,
-              color: window.PDFLib.rgb(1, 0.92, 0.2),
-              opacity: 0.4
-            });
-          } else if (ann.type === 'comment') {
-            // Yellow Sticky Note: Body + Header + Text
+          }
+          // 4. COMENTÁRIO / NOTA ADESIVA
+          else if (ann.type === 'comment') {
             const headerHeight = 16 * scaleY;
             
-            // Note body
+            // Corpo da nota
             page.drawRectangle({
               x: boxX,
               y: pdfHeight - boxYTop - boxH,
@@ -801,7 +905,7 @@ export class EditPdfTool {
               opacity: 0.95
             });
 
-            // Note top banner
+            // Barra superior
             page.drawRectangle({
               x: boxX,
               y: pdfHeight - boxYTop - headerHeight,
@@ -811,7 +915,7 @@ export class EditPdfTool {
               opacity: 1
             });
 
-            // Note title
+            // Título
             page.drawText('Comentario', {
               x: boxX + (5 * scaleX),
               y: pdfHeight - boxYTop - headerHeight + (3 * scaleY),
@@ -820,7 +924,7 @@ export class EditPdfTool {
               color: window.PDFLib.rgb(0.4, 0.25, 0.05)
             });
 
-            // Note comment text
+            // Texto do comentário
             if (ann.text.trim()) {
               const lines = ann.text.split('\n');
               const fontSize = 10 * scaleX;
@@ -839,8 +943,23 @@ export class EditPdfTool {
                 }
               }
             }
-          } else if (ann.type === 'text' && ann.text.trim()) {
-            // Text box
+          }
+          // 5. CAIXA DE TEXTO / SUBSTITUIR TEXTO
+          else if ((ann.type === 'text' || ann.type === 'replace_text') && ann.text.trim()) {
+            const isWhiteBg = ann.bgType === 'white' || ann.type === 'replace_text';
+
+            // Se for substituição ou fundo branco, apaga o texto original que estiver por baixo!
+            if (isWhiteBg) {
+              page.drawRectangle({
+                x: boxX,
+                y: pdfHeight - boxYTop - boxH,
+                width: boxW,
+                height: boxH,
+                color: window.PDFLib.rgb(1, 1, 1),
+                opacity: 1
+              });
+            }
+
             const font = ann.isBold ? fontBold : fontRegular;
             const pdfFontSize = ann.fontSize * scaleX;
             const headerOffset = 14 * scaleY;
@@ -851,7 +970,7 @@ export class EditPdfTool {
             for (const line of lines) {
               if (line.trim()) {
                 page.drawText(line, {
-                  x: boxX + (2 * scaleX),
+                  x: boxX + (3 * scaleX),
                   y: currentLineY,
                   size: pdfFontSize,
                   font: font,
