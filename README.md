@@ -1,6 +1,9 @@
 # 📄 PDF Studio Web
 
-Ferramenta completa de manipulação e edição de PDF inspirada no iLovePDF, desenvolvida para rodar **100% no navegador** e compatível com **GitHub Pages** (sem necessidade de backend, banco de dados ou compilação complexa).
+Ferramenta completa de manipulação e edição de PDF inspirada no iLovePDF, desenvolvida para rodar **100% no navegador** e publicada no **GitHub Pages** (sem backend, sem servidor, com privacidade total e custo zero).
+
+🌐 **Acesse a aplicação ao vivo:**  
+👉 **[https://labiomics.github.io/pdf-studio-web/](https://labiomics.github.io/pdf-studio-web/)**
 
 ---
 
