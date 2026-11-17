@@ -4,6 +4,8 @@
  */
 import { getLang, setLang, t } from './i18n.js';
 import { EditPdfTool } from './tools/editPdf.js';
+import { SignPdfTool } from './tools/signPdf.js';
+import { DocxToPdfTool } from './tools/docxToPdf.js';
 import { MergeTool } from './tools/merge.js';
 import { SplitTool } from './tools/split.js';
 import { OrganizeTool } from './tools/organize.js';
@@ -29,6 +31,40 @@ const TOOLS_CONFIG = [
     iconBg: 'bg-indigo-50 text-indigo-700',
     badge: { pt: 'Destaque', en: 'Featured', es: 'Destacado' },
     createInstance: () => new EditPdfTool()
+  },
+  {
+    id: 'sign-pdf',
+    name: {
+      pt: 'Assinar PDF',
+      en: 'Sign PDF',
+      es: 'Firmar PDF'
+    },
+    description: {
+      pt: 'Desenhe sua rubrica, digite seu nome ou insira uma imagem de assinatura no documento.',
+      en: 'Draw your handwritten signature, type your name, or upload a signature image.',
+      es: 'Dibuja tu firma a mano, escribe tu nombre o sube una imagen de tu firma al documento.'
+    },
+    icon: 'pen-tool',
+    iconBg: 'bg-emerald-50 text-emerald-700',
+    badge: { pt: 'Novo', en: 'New', es: 'Nuevo' },
+    createInstance: () => new SignPdfTool()
+  },
+  {
+    id: 'docx-to-pdf',
+    name: {
+      pt: 'Word (DOCX) para PDF',
+      en: 'Word (DOCX) to PDF',
+      es: 'Word (DOCX) a PDF'
+    },
+    description: {
+      pt: 'Converta documentos Word (.docx) em PDF com layout, tabelas e formatação preservados.',
+      en: 'Convert Word (.docx) documents to PDF with preserved layout, tables, and typography.',
+      es: 'Convierte documentos Word (.docx) a PDF conservando el diseño, tablas y formato.'
+    },
+    icon: 'file-type',
+    iconBg: 'bg-blue-50 text-blue-700',
+    badge: { pt: 'Novo', en: 'New', es: 'Nuevo' },
+    createInstance: () => new DocxToPdfTool()
   },
   {
     id: 'merge',

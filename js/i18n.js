@@ -143,7 +143,43 @@ export const TRANSLATIONS = {
     numberTopCenter: 'Cabeçalho Centro',
     numberTopRight: 'Cabeçalho Direita',
     numberFormat: 'Formato',
-    skipFirstPage: 'Não numerar a 1ª página (Capa)'
+    skipFirstPage: 'Não numerar a 1ª página (Capa)',
+
+    // Sign PDF Tool
+    signPdfTitle: 'Assinar PDF',
+    signPdfSubtitle: 'Desenhe sua rubrica, digite seu nome ou insira uma imagem de assinatura no documento.',
+    btnSignModal: '+ Criar / Inserir Assinatura',
+    btnSaveSigned: 'Salvar PDF Assinado',
+    signDropText: 'Selecione o documento PDF para assinar',
+    signDropSub: 'Desenhe sua rubrica, digite seu nome ou carregue uma imagem da assinatura',
+    signSelectedBadge: 'Assinatura Selecionada',
+    signHintDrag: 'Arraste a assinatura para a linha correspondente no documento e puxe a alça ◢ para redimensionar.',
+    signModalTitle: 'Criar Assinatura ou Rubrica',
+    signTabDraw: '✍️ Desenhar',
+    signTabType: '⌨️ Digitar',
+    signTabUpload: '📁 Carregar Foto',
+    signDrawHint: 'Desenhe aqui com o mouse ou tela sensível ao toque',
+    signInkColor: 'Cor da Tinta:',
+    btnClearPad: 'Limpar',
+    signYourName: 'Seu Nome Completo:',
+    signStyleLabel: 'Estilo da Assinatura:',
+    signUploadPrompt: 'Clique para enviar imagem da assinatura',
+    signUploadHint: 'Suporta PNG ou JPG (Fundo transparente recomendado)',
+    btnInsertSign: 'Inserir no Documento',
+
+    // DOCX to PDF Tool
+    docxToPdfTitle: 'Converter Word (DOCX) para PDF',
+    docxToPdfSubtitle: 'Converta arquivos do Word (.docx) em documentos PDF com layout, tabelas e formatação preservados.',
+    btnConvertDocx: 'Converter e Baixar PDF',
+    docxDropText: 'Selecione ou arraste seu arquivo Word (.docx)',
+    docxDropSub: 'Compatível com Word, Google Docs e LibreOffice',
+    docxOrientation: 'Orientação:',
+    docxMargin: 'Margens:',
+    docxStandard: 'Padrão (12mm)',
+    docxNarrow: 'Estreita (6mm)',
+    docxWide: 'Ampla (20mm)',
+    docxPreviewTitle: 'Pré-visualização do Documento Convertido:',
+    docxLocalBadge: '100% Processado no Navegador'
   },
 
   en: {
@@ -285,7 +321,43 @@ export const TRANSLATIONS = {
     numberTopCenter: 'Top Center',
     numberTopRight: 'Top Right',
     numberFormat: 'Format',
-    skipFirstPage: 'Skip first page (Cover page)'
+    skipFirstPage: 'Skip first page (Cover page)',
+
+    // Sign PDF Tool
+    signPdfTitle: 'Sign PDF',
+    signPdfSubtitle: 'Draw your handwritten signature, type your name, or upload a signature image.',
+    btnSignModal: '+ Create / Insert Signature',
+    btnSaveSigned: 'Save Signed PDF',
+    signDropText: 'Select the PDF document to sign',
+    signDropSub: 'Draw your initials, type your name, or upload a signature image',
+    signSelectedBadge: 'Selected Signature',
+    signHintDrag: 'Drag the signature to the desired line and pull the ◢ handle to resize.',
+    signModalTitle: 'Create Signature or Initials',
+    signTabDraw: '✍️ Draw',
+    signTabType: '⌨️ Type',
+    signTabUpload: '📁 Upload Photo',
+    signDrawHint: 'Draw here using your mouse or touchscreen',
+    signInkColor: 'Ink Color:',
+    btnClearPad: 'Clear',
+    signYourName: 'Your Full Name:',
+    signStyleLabel: 'Signature Style:',
+    signUploadPrompt: 'Click to upload a signature image',
+    signUploadHint: 'Supports PNG or JPG (Transparent background recommended)',
+    btnInsertSign: 'Insert into Document',
+
+    // DOCX to PDF Tool
+    docxToPdfTitle: 'Convert Word (DOCX) to PDF',
+    docxToPdfSubtitle: 'Convert Word (.docx) documents into PDF preserving layout, tables, and typography.',
+    btnConvertDocx: 'Convert & Download PDF',
+    docxDropText: 'Select or drag your Word (.docx) file here',
+    docxDropSub: 'Compatible with Microsoft Word, Google Docs, and LibreOffice',
+    docxOrientation: 'Orientation:',
+    docxMargin: 'Margins:',
+    docxStandard: 'Standard (12mm)',
+    docxNarrow: 'Narrow (6mm)',
+    docxWide: 'Wide (20mm)',
+    docxPreviewTitle: 'Converted Document Preview:',
+    docxLocalBadge: '100% Processed In-Browser'
   },
 
   es: {
@@ -427,7 +499,43 @@ export const TRANSLATIONS = {
     numberTopCenter: 'Encabezado Centro',
     numberTopRight: 'Encabezado Derecha',
     numberFormat: 'Formato',
-    skipFirstPage: 'No numerar la 1ª página (Portada)'
+    skipFirstPage: 'No numerar la 1ª página (Portada)',
+
+    // Sign PDF Tool
+    signPdfTitle: 'Firmar PDF',
+    signPdfSubtitle: 'Dibuja tu firma a mano, escribe tu nombre o sube una imagen de tu firma al documento.',
+    btnSignModal: '+ Crear / Insertar Firma',
+    btnSaveSigned: 'Guardar PDF Firmado',
+    signDropText: 'Selecciona el documento PDF para firmar',
+    signDropSub: 'Dibuja tu rúbrica, escribe tu nombre o sube una imagen de tu firma',
+    signSelectedBadge: 'Firma Seleccionada',
+    signHintDrag: 'Arrastra la firma a la línea correspondiente y jala el asa ◢ para redimensionar.',
+    signModalTitle: 'Crear Firma o Rúbrica',
+    signTabDraw: '✍️ Dibujar',
+    signTabType: '⌨️ Escribir',
+    signTabUpload: '📁 Cargar Foto',
+    signDrawHint: 'Dibuja aquí con el mouse o pantalla táctil',
+    signInkColor: 'Color de Tinta:',
+    btnClearPad: 'Limpiar',
+    signYourName: 'Tu Nombre Completo:',
+    signStyleLabel: 'Estilo de Firma:',
+    signUploadPrompt: 'Haz clic para cargar imagen de firma',
+    signUploadHint: 'Soporta PNG o JPG (Fondo transparente recomendado)',
+    btnInsertSign: 'Insertar en el Documento',
+
+    // DOCX to PDF Tool
+    docxToPdfTitle: 'Convertir Word (DOCX) a PDF',
+    docxToPdfSubtitle: 'Convierte archivos de Word (.docx) a PDF conservando el diseño, tablas y formato.',
+    btnConvertDocx: 'Convertir y Descargar PDF',
+    docxDropText: 'Selecciona o arrastra tu archivo Word (.docx)',
+    docxDropSub: 'Compatible con Word, Google Docs y LibreOffice',
+    docxOrientation: 'Orientación:',
+    docxMargin: 'Márgenes:',
+    docxStandard: 'Estándar (12mm)',
+    docxNarrow: 'Estrecho (6mm)',
+    docxWide: 'Amplio (20mm)',
+    docxPreviewTitle: 'Vista Previa del Documento Convertido:',
+    docxLocalBadge: '100% Procesado en el Navegador'
   }
 };
 
