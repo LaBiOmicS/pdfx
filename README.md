@@ -9,13 +9,14 @@ Ferramenta completa de manipulação e edição de PDF inspirada no iLovePDF, de
 
 ## 🌟 Principais Funcionalidades
 
-1. **Juntar PDFs (Merge)**: Combine múltiplos arquivos PDF na ordem que desejar, com arrastar-e-soltar.
-2. **Dividir PDF (Split)**: Separe por intervalos específicos (ex: `1-3, 5, 8-10`) ou extraia todas as páginas individuais em um pacote `.ZIP`.
-3. **Organizar Páginas (Visual Organize)**: Visualize miniaturas de todas as páginas renderizadas via canvas, reordene arrastando os cards (drag & drop), gire em $90^\circ$ ou exclua páginas indesejadas.
-4. **Imagens para PDF**: Converta fotos PNG, JPG e WebP em um único PDF organizado, com controle de formato (A4 vs Tamanho Real), orientação e margens.
-5. **PDF para Imagens**: Converta cada página do seu PDF em imagens PNG ou JPG de alta resolução (150, 200 ou 300 DPI), com download direto ou em lote compactado (`.zip`).
-6. **Marca d'Água (Watermark)**: Aplique carimbos de texto (ex: *CONFIDENCIAL*, *RASCUNHO*, *CÓPIA*) com ângulo, opacidade e cores customizáveis.
-7. **Numerar Páginas**: Insira numeração de páginas automatizada no cabeçalho ou rodapé, com opção de ignorar a capa (primeira página).
+1. **Editar PDF (Inserir Texto & Tarjas)**: Adicione caixas de texto editáveis e arrastáveis diretamente sobre as páginas do PDF, configure tamanho da fonte, cores, negrito e tarjas brancas (whiteout/redact) para preencher documentos e formulários.
+2. **Juntar PDFs (Merge)**: Combine múltiplos arquivos PDF na ordem que desejar, com arrastar-e-soltar.
+3. **Dividir PDF (Split)**: Separe por intervalos específicos (ex: `1-3, 5, 8-10`) ou extraia todas as páginas individuais em um pacote `.ZIP`.
+4. **Organizar Páginas (Visual Organize)**: Visualize miniaturas de todas as páginas renderizadas via canvas, reordene arrastando os cards (drag & drop), gire em $90^\circ$ ou exclua páginas indesejadas.
+5. **Imagens para PDF**: Converta fotos PNG, JPG e WebP em um único PDF organizado, com controle de formato (A4 vs Tamanho Real), orientação e margens.
+6. **PDF para Imagens**: Converta cada página do seu PDF em imagens PNG ou JPG de alta resolução (150, 200 ou 300 DPI), com download direto ou em lote compactado (`.zip`).
+7. **Marca d'Água (Watermark)**: Aplique carimbos de texto (ex: *CONFIDENCIAL*, *RASCUNHO*, *CÓPIA*) com ângulo, opacidade e cores customizáveis.
+8. **Numerar Páginas**: Insira numeração de páginas automatizada no cabeçalho ou rodapé, com opção de ignorar a capa (primeira página).
 
 ---
 

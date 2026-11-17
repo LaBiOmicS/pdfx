@@ -1,6 +1,7 @@
 /**
  * Application Main Controller & Router
  */
+import { EditPdfTool } from './tools/editPdf.js';
 import { MergeTool } from './tools/merge.js';
 import { SplitTool } from './tools/split.js';
 import { OrganizeTool } from './tools/organize.js';
@@ -10,6 +11,15 @@ import { WatermarkTool } from './tools/watermark.js';
 import { PageNumbersTool } from './tools/pageNumbers.js';
 
 const TOOLS_CONFIG = [
+  {
+    id: 'edit-pdf',
+    name: 'Editar PDF (Inserir Texto)',
+    description: 'Adicione caixas de texto editáveis, tarjas brancas e preencha formulários no documento.',
+    icon: 'type',
+    color: 'from-rose-500 to-indigo-600',
+    badge: 'Essencial',
+    createInstance: () => new EditPdfTool()
+  },
   {
     id: 'merge',
     name: 'Juntar PDF',
